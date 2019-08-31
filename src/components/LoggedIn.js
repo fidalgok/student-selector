@@ -1,8 +1,9 @@
 import React from 'react';
+import Header from '../layout/Header';
 
 const LoggedIn = (props) => {
   return (<>
-    Logged In
+    <Header />
   </>);
 }
 

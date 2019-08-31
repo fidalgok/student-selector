@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Auth } from 'aws-amplify';
 
 export const Form = styled.form`
   display: flex;
@@ -11,9 +12,12 @@ export const Form = styled.form`
 
 export const FormContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 768px;
+  grid-template-columns: 32rem 32rem;
   background: white;
+  min-height: 100vh;
+  align-content:center;
+  justify-content: center;
+  margin: auto;
 `;
 
 export const Title = styled.p`
@@ -35,7 +39,9 @@ export const Input = styled.input`
   border-radius: 5px;
   background-color: hsl(245, 15%, 90%);
   border: none;
-
+  margin-bottom: 1.2rem;
+  width: 24rem;
+  border-bottom: 2px inset hsla(245, 85%, 70%, 0);
   &:focus {
     outline: none;
     border-bottom: 2px inset hsl(245, 85%, 70%);
@@ -43,44 +49,72 @@ export const Input = styled.input`
 `;
 
 const Container = styled.div`
-  height: 100%;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: hsl(245, 95%, 65%);
-  padding: 3.2rem 1.2rem;
+  padding: 2.4rem;
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   color: white;
   background-color: hsl(245, 85%, 65%);
   border: none;
   border-radius: 5px;
+  padding: 1.2rem 2.4rem;
 
+  &.invert-color {
+    color: hsl(245, 85%, 65%);
+    background-color: white;
+  }
 `;
 
-export const SignUp = ({ signUp, updateFormState }) => {
+export const SignUp = (props) => {
   return (
     <Container>
-
-      <Title className="color-light">Hello, Friend!</Title>
-      <p style={{ color: 'white' }}>Enter your information to start calling your students!</p>
+      <Title className="color-light">Hello Friend!</Title>
+      <p style={{ color: 'white' }}>Need an account? Enter your information to start calling your students!</p>
+      <Button
+        className="invert-color"
+        onClick={props.updateFormType}
+      >Sign Up</Button>
     </Container>
   )
 }
+
 export const SignIn = (props) => {
   return (
     <Container>
 
-      <Title className="color-light">Welcome Back!</Title>
-      <p style={{ color: 'white' }}>Glad you're here! Please login with your personal info.</p>
+      <Title className="color-light">Already have an account?</Title>
+      <p style={{ color: 'white' }}>Glad you're back! Please login with your personal info.</p>
+      <Button
+        className='invert-color'
+        onClick={props.updateFormType}
+      >Sign In</Button>
     </Container>
   )
 }
 
 function ConfirmSignUp(props) {
   return (
-    <Form onSubmit={(e) => { e.preventDefault(); props.confirmSignUp() }}>
+    <Form
+      onSubmit={(e) => { e.preventDefault(); props.confirmSignUp() }}
+      style={{ gridColumn: 'span 2' }}
+    >
+      <Title className="color-dark">You've got mail!</Title>
+      <p>Check your email for a confirmation code.</p>
+      <p>Didn't receive a code? <span onClick={
+        async () => {
+          try {
+            await Auth.resendSignUp(props.username)
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+      }>Send me a new code</span></p>
       <Input
         name='confirmationCode'
         placeholder='Confirmation Code'
@@ -98,7 +132,6 @@ const SignUpForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('about to submit the form')
     props.signUp();
   }
   return (
@@ -128,7 +161,7 @@ const SignUpForm = (props) => {
         </Form>
       )}
 
-      <SignIn />
+      {props.formType !== 'confirmSignUp' && <SignIn updateFormType={props.updateFormType} />}
     </FormContainer>
   );
 }

@@ -1,0 +1,59 @@
+# type Task
+#   @model
+#   @auth(rules: [
+#       {allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete]},
+#       {allow: groups, groups: ["Employees"], queries: [get, list], mutations: null}
+#     ])
+# {
+#   id: ID!
+#   title: String!
+#   description: String
+#   status: String
+# }
+
+# type PrivateNote
+#   @model
+#   @auth(rules: [{allow: owner}])
+# {
+#   id: ID!
+#   content: String!
+# }
+
+type Course
+  @model(subscriptions: null)
+  @auth(rules: [{allow: owner}]){
+    id: ID!
+    name: String
+    students: [Student]!
+    created_at: String!
+    updated_at: String
+  }
+
+type Session @model(subscriptions: null)
+  @auth(rules: [{allow: owner}]) {
+    id: ID!
+    called_students: [SessionScore!]!
+    students: [Student!]!
+    course: Course!
+    active: Boolean!
+    created_at: String!
+    updated_at: String
+}
+
+type SessionScore @model(subscriptions: null)
+  @auth(rules: [{allow: owner}]){
+    id: ID!
+    student: Student!
+    rating: String
+    created_at: String!
+    updated_at: String
+}
+
+type Student @model(subscriptions: null)
+  @auth(rules: [{allow: owner}]){
+    id: ID!
+    name: String!
+    created_at: String!
+    updated_at: String
+  }
+

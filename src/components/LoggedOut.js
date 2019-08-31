@@ -1,11 +1,11 @@
 import React from 'react';
-import styled from '@emotion/styled';
 import { Auth } from 'aws-amplify'
 import SignUpForm from './SignupForm';
+import SignInForm from './SignInForm';
 
 
 const LoggedOut = (props) => {
-  const [formType, setFormType] = React.useState('signUp');
+  const [formType, setFormType] = React.useState('signIn');
   const [formState, updateFormState] = React.useReducer((state, action) => {
     switch (action.type) {
       case 'updateFormState':
@@ -31,14 +31,27 @@ const LoggedOut = (props) => {
           <SignUpForm
             signUp={() => signUp(formState, setFormType)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
+            updateFormType={() => setFormType('signIn')}
           />
         );
       case 'confirmSignUp':
         return (
           <SignUpForm
             formType={formType}
+            username={formState.username}
             confirmSignUp={() => confirmSignUp(formState, setFormType)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
+            updateFormType={() => setFormType('signIn')}
+          />
+        );
+      case 'signIn':
+        return (
+          <SignInForm
+            signIn={() => signIn(formState)}
+            updateFormState={e => updateFormState({
+              type: 'updateFormState', e
+            })}
+            updateFormType={() => setFormType('signUp')}
           />
         )
       default:
@@ -66,7 +79,6 @@ async function confirmSignUp({ username, confirmationCode, password }, setFormTy
   try {
     await Auth.confirmSignUp(username, confirmationCode)
     console.log('confirm sign up success!')
-    setFormType('signIn');
     await signIn({ username, password });
   } catch (err) {
     console.log('error signing up..', err)

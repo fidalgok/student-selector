@@ -92,6 +92,9 @@ const useAmplifyAuth = () => {
               type: amplifyActionTypes.SIGN_IN_FAILURE,
               payload: payload
             })
+            break;
+          default:
+            break;
         }
 
 
