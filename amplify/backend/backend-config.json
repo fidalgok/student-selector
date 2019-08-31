@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"studentselectorf6371632": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

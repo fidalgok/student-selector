@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "student-selector-dev-20190830144822-authRole",
+            "UnauthRoleArn": "arn:aws:iam::866317749350:role/student-selector-dev-20190830144822-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::866317749350:role/student-selector-dev-20190830144822-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "student-selector-dev-20190830144822-deployment",
+            "UnauthRoleName": "student-selector-dev-20190830144822-unauthRole",
+            "StackName": "student-selector-dev-20190830144822",
+            "StackId": "arn:aws:cloudformation:us-east-1:866317749350:stack/student-selector-dev-20190830144822/be12f450-cb56-11e9-8453-0e243b4b1cce"
+        },
+        "categories": {
+            "auth": {
+                "studentselectorf6371632": {}
+            }
+        }
+    }
+}
