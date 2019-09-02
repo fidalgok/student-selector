@@ -6,10 +6,16 @@ export const getCourse = `query GetCourse($id: ID!) {
     id
     name
     students {
-      id
       name
-      created_at
-      updated_at
+    }
+    sessions {
+      items {
+        id
+        status
+        created_at
+        updated_at
+      }
+      nextToken
     }
     created_at
     updated_at
@@ -26,10 +32,10 @@ export const listCourses = `query ListCourses(
       id
       name
       students {
-        id
         name
-        created_at
-        updated_at
+      }
+      sessions {
+        nextToken
       }
       created_at
       updated_at
@@ -41,37 +47,28 @@ export const listCourses = `query ListCourses(
 export const getSession = `query GetSession($id: ID!) {
   getSession(id: $id) {
     id
-    called_students {
-      id
+    calledStudents {
       student {
-        id
         name
-        created_at
-        updated_at
       }
-      rating
-      created_at
-      updated_at
+      score
     }
-    students {
-      id
+    remainingStudents {
       name
-      created_at
-      updated_at
     }
     course {
       id
       name
       students {
-        id
         name
-        created_at
-        updated_at
+      }
+      sessions {
+        nextToken
       }
       created_at
       updated_at
     }
-    active
+    status
     created_at
     updated_at
   }
@@ -85,17 +82,11 @@ export const listSessions = `query ListSessions(
   listSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      called_students {
-        id
-        rating
-        created_at
-        updated_at
+      calledStudents {
+        score
       }
-      students {
-        id
+      remainingStudents {
         name
-        created_at
-        updated_at
       }
       course {
         id
@@ -103,69 +94,7 @@ export const listSessions = `query ListSessions(
         created_at
         updated_at
       }
-      active
-      created_at
-      updated_at
-    }
-    nextToken
-  }
-}
-`;
-export const getSessionScore = `query GetSessionScore($id: ID!) {
-  getSessionScore(id: $id) {
-    id
-    student {
-      id
-      name
-      created_at
-      updated_at
-    }
-    rating
-    created_at
-    updated_at
-  }
-}
-`;
-export const listSessionScores = `query ListSessionScores(
-  $filter: ModelSessionScoreFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listSessionScores(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      student {
-        id
-        name
-        created_at
-        updated_at
-      }
-      rating
-      created_at
-      updated_at
-    }
-    nextToken
-  }
-}
-`;
-export const getStudent = `query GetStudent($id: ID!) {
-  getStudent(id: $id) {
-    id
-    name
-    created_at
-    updated_at
-  }
-}
-`;
-export const listStudents = `query ListStudents(
-  $filter: ModelStudentFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
+      status
       created_at
       updated_at
     }

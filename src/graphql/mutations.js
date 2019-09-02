@@ -6,10 +6,16 @@ export const createCourse = `mutation CreateCourse($input: CreateCourseInput!) {
     id
     name
     students {
-      id
       name
-      created_at
-      updated_at
+    }
+    sessions {
+      items {
+        id
+        status
+        created_at
+        updated_at
+      }
+      nextToken
     }
     created_at
     updated_at
@@ -21,10 +27,16 @@ export const updateCourse = `mutation UpdateCourse($input: UpdateCourseInput!) {
     id
     name
     students {
-      id
       name
-      created_at
-      updated_at
+    }
+    sessions {
+      items {
+        id
+        status
+        created_at
+        updated_at
+      }
+      nextToken
     }
     created_at
     updated_at
@@ -36,10 +48,16 @@ export const deleteCourse = `mutation DeleteCourse($input: DeleteCourseInput!) {
     id
     name
     students {
-      id
       name
-      created_at
-      updated_at
+    }
+    sessions {
+      items {
+        id
+        status
+        created_at
+        updated_at
+      }
+      nextToken
     }
     created_at
     updated_at
@@ -49,37 +67,28 @@ export const deleteCourse = `mutation DeleteCourse($input: DeleteCourseInput!) {
 export const createSession = `mutation CreateSession($input: CreateSessionInput!) {
   createSession(input: $input) {
     id
-    called_students {
-      id
+    calledStudents {
       student {
-        id
         name
-        created_at
-        updated_at
       }
-      rating
-      created_at
-      updated_at
+      score
     }
-    students {
-      id
+    remainingStudents {
       name
-      created_at
-      updated_at
     }
     course {
       id
       name
       students {
-        id
         name
-        created_at
-        updated_at
+      }
+      sessions {
+        nextToken
       }
       created_at
       updated_at
     }
-    active
+    status
     created_at
     updated_at
   }
@@ -88,37 +97,28 @@ export const createSession = `mutation CreateSession($input: CreateSessionInput!
 export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!) {
   updateSession(input: $input) {
     id
-    called_students {
-      id
+    calledStudents {
       student {
-        id
         name
-        created_at
-        updated_at
       }
-      rating
-      created_at
-      updated_at
+      score
     }
-    students {
-      id
+    remainingStudents {
       name
-      created_at
-      updated_at
     }
     course {
       id
       name
       students {
-        id
         name
-        created_at
-        updated_at
+      }
+      sessions {
+        nextToken
       }
       created_at
       updated_at
     }
-    active
+    status
     created_at
     updated_at
   }
@@ -127,109 +127,28 @@ export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!
 export const deleteSession = `mutation DeleteSession($input: DeleteSessionInput!) {
   deleteSession(input: $input) {
     id
-    called_students {
-      id
+    calledStudents {
       student {
-        id
         name
-        created_at
-        updated_at
       }
-      rating
-      created_at
-      updated_at
+      score
     }
-    students {
-      id
+    remainingStudents {
       name
-      created_at
-      updated_at
     }
     course {
       id
       name
       students {
-        id
         name
-        created_at
-        updated_at
+      }
+      sessions {
+        nextToken
       }
       created_at
       updated_at
     }
-    active
-    created_at
-    updated_at
-  }
-}
-`;
-export const createSessionScore = `mutation CreateSessionScore($input: CreateSessionScoreInput!) {
-  createSessionScore(input: $input) {
-    id
-    student {
-      id
-      name
-      created_at
-      updated_at
-    }
-    rating
-    created_at
-    updated_at
-  }
-}
-`;
-export const updateSessionScore = `mutation UpdateSessionScore($input: UpdateSessionScoreInput!) {
-  updateSessionScore(input: $input) {
-    id
-    student {
-      id
-      name
-      created_at
-      updated_at
-    }
-    rating
-    created_at
-    updated_at
-  }
-}
-`;
-export const deleteSessionScore = `mutation DeleteSessionScore($input: DeleteSessionScoreInput!) {
-  deleteSessionScore(input: $input) {
-    id
-    student {
-      id
-      name
-      created_at
-      updated_at
-    }
-    rating
-    created_at
-    updated_at
-  }
-}
-`;
-export const createStudent = `mutation CreateStudent($input: CreateStudentInput!) {
-  createStudent(input: $input) {
-    id
-    name
-    created_at
-    updated_at
-  }
-}
-`;
-export const updateStudent = `mutation UpdateStudent($input: UpdateStudentInput!) {
-  updateStudent(input: $input) {
-    id
-    name
-    created_at
-    updated_at
-  }
-}
-`;
-export const deleteStudent = `mutation DeleteStudent($input: DeleteStudentInput!) {
-  deleteStudent(input: $input) {
-    id
-    name
+    status
     created_at
     updated_at
   }

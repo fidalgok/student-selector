@@ -36,4 +36,7 @@
 #end
 ## [End] If not static group authorized, filter items **
 
-$util.toJson($ctx.result)
+#if( !$result )
+  #set( $result = $ctx.result )
+#end
+$util.toJson($result)
