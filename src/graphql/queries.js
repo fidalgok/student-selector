@@ -12,13 +12,13 @@ export const getCourse = `query GetCourse($id: ID!) {
       items {
         id
         status
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
       nextToken
     }
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -37,8 +37,8 @@ export const listCourses = `query ListCourses(
       sessions {
         nextToken
       }
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     nextToken
   }
@@ -65,12 +65,12 @@ export const getSession = `query GetSession($id: ID!) {
       sessions {
         nextToken
       }
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     status
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -91,12 +91,12 @@ export const listSessions = `query ListSessions(
       course {
         id
         name
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
       status
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     nextToken
   }

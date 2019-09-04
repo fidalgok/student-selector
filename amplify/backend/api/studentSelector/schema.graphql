@@ -5,8 +5,8 @@ type Course
     name: String!
     students: [Student]!
     sessions: [Session]! @connection(name: "CourseSessions")
-    created_at: String
-    updated_at: String
+    createdAt: String
+    updatedAt: String
   }
 
 type Session @model(subscriptions: null)
@@ -16,8 +16,8 @@ type Session @model(subscriptions: null)
     remainingStudents: [Student]!
     course: Course! @connection(name: "CourseSessions")
     status: SessionStatus!
-    created_at: String
-    updated_at: String
+    createdAt: String
+    updatedAt: String
 }
 
 type SessionScore {

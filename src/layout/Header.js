@@ -4,11 +4,17 @@ import { Auth } from 'aws-amplify';
 import Container from './Container';
 import Button from '../components/styled/Button';
 
+const HeaderContainer = styled(Container)`
+  z-index: 999;
+
+  color: var(--color-white);
+`;
+
 const AppTitle = styled.a`
-  color: #222;
   font-size: 3.2rem;
   text-decoration: none;
   font-weight: 800;
+
 `;
 
 const Logout = styled(Button)`
@@ -20,13 +26,15 @@ font-size: 1.6rem;
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  align-items: center;
+
+  padding: 1.5rem 4rem;
 `;
 
 const Header = (props) => {
 
   return (<>
-    <Container>
+    <HeaderContainer>
       <Wrapper>
         <AppTitle>Student Selector</AppTitle>
         <Logout onClick={async () => {
@@ -37,7 +45,7 @@ const Header = (props) => {
           }
         }}>Logout</Logout>
       </Wrapper>
-    </Container>
+    </HeaderContainer>
   </>);
 }
 

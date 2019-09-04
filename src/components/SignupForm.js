@@ -1,94 +1,26 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Auth } from 'aws-amplify';
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2.4rem;
-`;
-
-export const FormContainer = styled.div`
-  display: grid;
-  grid-template-columns: 32rem 32rem;
-  background: white;
-  min-height: 100vh;
-  align-content:center;
-  justify-content: center;
-  margin: auto;
-`;
-
-export const Title = styled.p`
-  font-size: 2.8rem;
-  font-weight: 800;
-  margin-bottom: 2.4rem;
-
-  &.color-light {
-    color: white;
-  }
-
-  &.color-dark {
-    color: #222;
-  }
-`;
-
-export const Input = styled.input`
-  padding: 1rem 4px;
-  border-radius: 5px;
-  background-color: hsl(245, 15%, 90%);
-  border: none;
-  margin-bottom: 1.2rem;
-  width: 24rem;
-  border-bottom: 2px inset hsla(245, 85%, 70%, 0);
-  &:focus {
-    outline: none;
-    border-bottom: 2px inset hsl(245, 85%, 70%);
-  }
-`;
+import { Input, Form, FormContainer, Title, Button } from './styled/Form';
 
 const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background: hsl(245, 95%, 65%);
-  padding: 2.4rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9cd49;
+  background-image: linear-gradient(151deg, #f9cd49 0%, #f55c0a 74%);
+  padding: 4.8rem 2.4rem;
 `;
 
-export const Button = styled.button`
-  color: white;
-  background-color: hsl(245, 85%, 65%);
-  border: none;
-  border-radius: 5px;
-  padding: 1.2rem 2.4rem;
-
-  &.invert-color {
-    color: hsl(245, 85%, 65%);
-    background-color: white;
-  }
-`;
-
-export const SignUp = (props) => {
-  return (
-    <Container>
-      <Title className="color-light">Hello Friend!</Title>
-      <p style={{ color: 'white' }}>Need an account? Enter your information to start calling your students!</p>
-      <Button
-        className="invert-color"
-        onClick={props.updateFormType}
-      >Sign Up</Button>
-    </Container>
-  )
-}
 
 export const SignIn = (props) => {
   return (
     <Container>
 
       <Title className="color-light">Already have an account?</Title>
-      <p style={{ color: 'white' }}>Glad you're back! Please login with your personal info.</p>
+      <p style={{ color: 'var(--color-white)', margin: '0', fontSize: '1.8rem', textAlign: 'center' }}>Glad you're back! <br />Please login with your personal info.</p>
       <Button
         className='invert-color'
         onClick={props.updateFormType}

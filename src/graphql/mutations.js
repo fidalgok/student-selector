@@ -12,13 +12,13 @@ export const createCourse = `mutation CreateCourse($input: CreateCourseInput!) {
       items {
         id
         status
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
       nextToken
     }
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -33,13 +33,13 @@ export const updateCourse = `mutation UpdateCourse($input: UpdateCourseInput!) {
       items {
         id
         status
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
       nextToken
     }
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -54,13 +54,13 @@ export const deleteCourse = `mutation DeleteCourse($input: DeleteCourseInput!) {
       items {
         id
         status
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
       nextToken
     }
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -85,12 +85,12 @@ export const createSession = `mutation CreateSession($input: CreateSessionInput!
       sessions {
         nextToken
       }
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     status
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -115,12 +115,12 @@ export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!
       sessions {
         nextToken
       }
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     status
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;
@@ -145,12 +145,12 @@ export const deleteSession = `mutation DeleteSession($input: DeleteSessionInput!
       sessions {
         nextToken
       }
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
     status
-    created_at
-    updated_at
+    createdAt
+    updatedAt
   }
 }
 `;

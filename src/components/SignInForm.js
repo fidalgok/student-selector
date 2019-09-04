@@ -1,7 +1,32 @@
 import React from 'react';
-import { FormContainer, Form, Input, Button, Title, SignUp } from './SignupForm'
+import styled from '@emotion/styled';
+import { FormContainer, Form, Input, Button, Title } from './styled/Form'
 
+const Container = styled.div`
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items:center;
+  background-color: #f9cd49;
+  background-image: linear-gradient(151deg, #f9cd49 0%, #f55c0a 74%);
+  padding: 4.8rem 2.4rem;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+`;
+
+const SignUp = (props) => {
+  return (
+    <Container>
+      <Title className="color-light">Hello Friend!</Title>
+      <p style={{ color: 'var(--color-white)', margin: '0', fontSize: '1.8rem', textAlign: 'center' }}>Need an account? <br />Enter your information to start calling your students!</p>
+      <Button
+        className="invert-color"
+        onClick={props.updateFormType}
+      >Sign Up</Button>
+    </Container>
+  )
+}
 
 const SignInForm = (props) => {
 
