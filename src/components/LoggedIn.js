@@ -48,6 +48,7 @@ const LoggedIn = (props) => {
   React.useEffect(() => {
     fetchCourses();
   }, []);
+
   return (
     <>
       <Header />

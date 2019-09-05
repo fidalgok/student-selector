@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { createCourse, updateCourseStudents, updateCourse } from '../utils';
 import { useCourseDispatch, courseActions } from '../courseContext';
 
+import { CreateStudentForm } from './CreateStudentForm'
+
 const initialState = {
   course: null,
   students: [],
@@ -90,45 +92,6 @@ export const CreateCourseForm = (props) => {
   )
 }
 
-export const CreateStudentForm = (props) => {
-  const [studentName, setStudentName] = React.useState('')
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!studentName.length) return;
-    try {
-      const { error, students } = await updateCourseStudents(props.courseId, [{ name: studentName }, ...props.students]);
-      if (error) throw new Error(error);
-
-      props.courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: props.courseId, students } });
-
-      props.setState({
-        type: 'create_student',
-        student: { name: studentName },
-      });
-
-    } catch (err) {
-      console.log(err);
-    }
-    setStudentName('');
-  }
-  return (
-
-    <form onSubmit={handleSubmit}>
-      <h2>Add Students</h2>
-      <div>
-        <label htmlFor="studentName">Student Name</label>
-        <input type="text" id="studentName" name="studentName"
-          onChange={(e) => {
-            setStudentName(e.target.value);
-          }}
-          value={studentName}
-        />
-        <button type="submit">Create</button>
-      </div>
-    </form>
-  )
-}
 
 
 const StudentList = ({ students }) => {

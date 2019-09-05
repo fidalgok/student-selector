@@ -14,6 +14,7 @@ const AppTitle = styled.a`
   font-size: 3.2rem;
   text-decoration: none;
   font-weight: 800;
+  color: inherit;
 
 `;
 
@@ -36,7 +37,7 @@ const Header = (props) => {
   return (<>
     <HeaderContainer>
       <Wrapper>
-        <AppTitle>Student Selector</AppTitle>
+        <AppTitle href='/'>Student Selector</AppTitle>
         <Logout onClick={async () => {
           try {
             await Auth.signOut();

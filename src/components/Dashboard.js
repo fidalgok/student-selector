@@ -21,7 +21,7 @@ const DashboardTitle = styled.h2`
 `;
 
 const DashboardButton = styled(Button)`
-
+  text-decoration:none;
 `;
 const Dashboard = (props) => {
   const courseDispatch = useCourseDispatch();
@@ -48,7 +48,7 @@ const Dashboard = (props) => {
       <>
         <DashboardHeader>
           <DashboardTitle>Courses Dashboard</DashboardTitle>
-          <DashboardButton className='primary' as={Link} to={`/course/new`} onClick={() => setShowCreateCourse(true)}>Create One</DashboardButton>
+          <DashboardButton className='primary' as={Link} to={`/course/new`} onClick={() => setShowCreateCourse(true)}>Create Course</DashboardButton>
         </DashboardHeader>
         {renderDashboard()}
       </>

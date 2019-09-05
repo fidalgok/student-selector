@@ -6,6 +6,7 @@ import Input from './styled/Input';
 import { updateCourse, updateCourseStudents, deleteCourseStudent } from '../utils';
 import { useCourseDispatch, courseActions } from '../courseContext';
 import BaseButton from './styled/Button';
+import { CreateStudentForm } from './CreateStudentForm';
 
 
 const Button = styled(BaseButton)`
@@ -72,6 +73,8 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
       </div>
       <div>
         <h2>Students</h2>
+        <CreateStudentForm studentList={course.students} courseId={course.id} courseDispatch={courseDispatch} />
+
         {updatedStudents.map((student) => {
           return student.isEditing ? (
             <EditStudent
