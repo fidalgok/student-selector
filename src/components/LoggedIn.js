@@ -3,7 +3,8 @@ import styled from '@emotion/styled';
 import Header from '../layout/Header';
 import Container from '../layout/Container';
 import Router from '../Router';
-import { CourseProvider } from '../courseContext'
+import { CourseProvider, useCourseState, useCourseDispatch, courseActions } from '../courseContext'
+import { listCourses } from '../utils';
 
 export const AppContainer = styled(Container)`
   &::before {
@@ -27,17 +28,45 @@ export const Main = styled.main`
 `;
 
 const LoggedIn = (props) => {
+  const { courses } = useCourseState();
+  const courseDispatch = useCourseDispatch();
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+  const fetchCourses = async () => {
+    try {
+      const { error: fetchError, courses: courseList } = await listCourses();
+      if (fetchError) throw new Error(fetchError);
+      courseDispatch({ type: courseActions.LOAD_COURSES, courses: courseList })
+      setLoading(false);
+    } catch (err) {
+      setLoading(false)
+      setError(err);
+    }
+  }
+
+  React.useEffect(() => {
+    fetchCourses();
+  }, []);
   return (
-    <CourseProvider>
+    <>
       <Header />
       <AppContainer>
         <Main>
-          <Router>
+          <Router courses={courses}>
           </Router>
         </Main>
       </AppContainer>
-    </CourseProvider>
+    </>
   );
 }
 
-export default LoggedIn;
+const LoggedInWithCourses = (props) => {
+  return (
+    <CourseProvider>
+      <LoggedIn />
+    </CourseProvider>
+  )
+}
+
+export default LoggedInWithCourses;

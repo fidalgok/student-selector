@@ -22,11 +22,11 @@ const CourseActions = styled.div`
 const CourseTitle = styled.p`
   font-size: 2.4rem;
   margin:0;
-  margin-right: 1.2rem;
+  margin-right: 4.8rem;
 `;
 
 const StudentInfo = styled.div`
-  color: var(--color-neutral-5);
+  color: var(--color-neutral-8);
   font-size: 1.2rem;
 `;
 
@@ -53,18 +53,26 @@ const SessionsList = (props) => {
   const renderSessions = () => {
     return (
       <StyledList>
-        {props.sessions.length ? props.sessions.map(session => (
+        {!props.activeSession && !!props.completedSessions.length && (
+          <ListItem>
+            <SessionInfo>
+              This course does not have any sessions.
+            </SessionInfo>
+          </ListItem>
+        )}
+        {props.activeSession && (<ListItem key={props.activeSession.id}>
+          <span>Status</span><span>{props.activeSession.status}</span>
+          <span>Remaining Students: </span><span>{props.activeSession.remainingStudents.length}</span>
+          <span>Called Students: </span><span>{props.activeSession.calledStudents.length}</span>
+        </ListItem>)}
+        {props.completedSessions.length ? props.completedSessions.map(session => (
           <ListItem key={session.id}>
             <span>Status</span><span>{session.status}</span>
             <span>Remaining Students: </span><span>{session.remainingStudents.length}</span>
             <span>Called Students: </span><span>{session.calledStudents.length}</span>
           </ListItem>
-        )) : (<ListItem>
-          <SessionInfo>
-            No Sessions started, {' '}<Button className='secondary'>start a session?</Button>
-          </SessionInfo>
-        </ListItem>)
-        }
+        )) : null}
+
       </StyledList>
 
     )
@@ -74,24 +82,29 @@ const SessionsList = (props) => {
 }
 
 const CourseCard = ({ course, ...props }) => {
-  const activeSession = course.sessions.items.find(sesh => sesh.status === 'IN_PROGRESS');
-  const startedSessions = course.sessions.items.filter(sesh => sesh.status !== 'NEW');
+  const activeSession = course.sessions.items.find(sesh => sesh.status === 'IN_PROGRESS' || 'NEW');
+  const completedSessions = course.sessions.items.filter(sesh => sesh.status === 'COMPLETE');
+
   const handleDelete = async () => {
-    deleteCourse(course.id);
+    await deleteCourse(course.id);
     props.deleteCourse(course.id);
+  }
+  const handleAddSession = async () => {
+
   }
   return (<CourseContainer key={course.id}>
     <CourseActions>
       <CourseTitle>{course.name}</CourseTitle>
       <Button className="primary">{!!activeSession ? 'Resume Session' : 'New Session'}</Button>
       <Button className="secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
+      {!course.sessions.items.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
     </CourseActions>
     <StudentInfo>
       {course.students.length} students
     </StudentInfo>
-    {!course.sessions.items.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
+
     <div>
-      <SessionsList sessions={startedSessions} />
+      <SessionsList completedSessions={completedSessions} activeSession={activeSession} />
     </div>
   </CourseContainer>);
 }

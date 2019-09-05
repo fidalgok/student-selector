@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { createCourse, updateCourseStudents, updateCourse } from '../utils';
+import { useCourseDispatch, courseActions } from '../courseContext';
 
 const initialState = {
   course: null,
@@ -27,16 +29,17 @@ const createCourseReducer = (state, action) => {
 const CreateCourse = (props) => {
   const [state, dispatch] = React.useReducer(createCourseReducer, initialState);
   const [formType, setFormType] = React.useState(props.stage || 'course');
+  const courseDispatch = useCourseDispatch();
 
   const renderStages = () => {
     switch (formType) {
       case 'course':
-        return <CreateCourseForm setState={dispatch} setFormType={setFormType} />
+        return <CreateCourseForm setState={dispatch} setFormType={setFormType} courseDispatch={courseDispatch} />
       case 'student':
         return (
           <>
             <h2>Add students to {state.course.name}</h2>
-            <CreateStudentForm setState={dispatch} setFormType={setFormType} courseId={state.course.id} students={state.students} />
+            <CreateStudentForm setState={dispatch} setFormType={setFormType} courseDispatch={courseDispatch} courseId={state.course.id} students={state.students} />
             <StudentList students={state.students} />
           </>
         )
@@ -46,18 +49,13 @@ const CreateCourse = (props) => {
   return (
     <>
       <h2>Create a course and add your students</h2>
-      {state.course && <button onClick={() => {
-
-
-        props.setCourses({ ...state.course, students: state.students });
-        props.setShowCreateCourse(false)
-      }}>Done Editing Course</button>}
+      {state.course && <Link to='/'>Done Editing Course</Link>}
       {renderStages()}
     </>
   )
 }
 
-const CreateCourseForm = (props) => {
+export const CreateCourseForm = (props) => {
   const [courseName, setCourseName] = React.useState('');
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,6 +63,7 @@ const CreateCourseForm = (props) => {
     try {
       const { error, course: newCourse } = await createCourse(courseName);
       if (error) throw new Error(error);
+      props.courseDispatch({ type: courseActions.CREATE_COURSE, course: newCourse });
       props.setState({
         type: 'create_course',
         course: newCourse
@@ -77,7 +76,7 @@ const CreateCourseForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Step 1: New Course</h2>
+      <h2>Create Course</h2>
       <div>
         <label htmlFor="courseName">Course Name</label>
         <input type="text" id="courseName" name="courseName" onChange={(e) => {
@@ -91,15 +90,17 @@ const CreateCourseForm = (props) => {
   )
 }
 
-const CreateStudentForm = (props) => {
+export const CreateStudentForm = (props) => {
   const [studentName, setStudentName] = React.useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!studentName.length) return;
     try {
-      const { error, students } = await updateCourseStudents(props.courseId, studentName, props.students);
+      const { error, students } = await updateCourseStudents(props.courseId, [{ name: studentName }, ...props.students]);
       if (error) throw new Error(error);
+
+      props.courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: props.courseId, students } });
 
       props.setState({
         type: 'create_student',
@@ -114,7 +115,7 @@ const CreateStudentForm = (props) => {
   return (
 
     <form onSubmit={handleSubmit}>
-      <h2>Step 2: Add Students</h2>
+      <h2>Add Students</h2>
       <div>
         <label htmlFor="studentName">Student Name</label>
         <input type="text" id="studentName" name="studentName"

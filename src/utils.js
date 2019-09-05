@@ -1,4 +1,5 @@
 import { API, graphqlOperation } from 'aws-amplify';
+import { courseActions } from './courseContext';
 
 // random num generator
 
@@ -47,6 +48,12 @@ export const listCourses = async () => {
             items{
               id
               status
+              calledStudents{
+                student{
+                  name
+                }
+                score
+              }
               remainingStudents{
                 name
               }
@@ -94,7 +101,7 @@ export async function createCourse(courseName) {
   }
 }
 
-export const updateCourseStudents = async (courseId, studentName, studentList) => {
+export const updateCourseStudents = async (courseId, studentList) => {
   // use the update course mutation to add students
   // maybe refactor the api later to use student ids?
   const updateCourseMutation = `
@@ -111,7 +118,7 @@ export const updateCourseStudents = async (courseId, studentName, studentList) =
     const { data } = await API.graphql(graphqlOperation(updateCourseMutation, {
       input: {
         id: courseId,
-        students: [{ name: studentName }, ...studentList]
+        students: studentList
       }
     }
     ));
@@ -120,11 +127,35 @@ export const updateCourseStudents = async (courseId, studentName, studentList) =
   } catch (error) { return { error } }
 }
 
-export const updateCourse = async (...params) => {
+export const deleteCourseStudent = async (courseDispatch, courseId, students) => {
+  const deleteCourseStudentMutation = `
+  mutation deleteCourseStudents($input: UpdateCourseInput!){
+
+    updateCourse(input: $input){
+      students{
+        name
+      }
+    }
+  }
+  `
+  try {
+    const { data } = await API.graphql(graphqlOperation(deleteCourseStudentMutation, {
+      input: {
+        id: courseId,
+        students: students
+      }
+    }));
+    // update the courseContext
+    debugger;
+    courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: courseId, students: data.updateCourse.students } });
+  } catch (err) { return { error: err } }
+}
+
+export const updateCourse = async (courseDispatch, id, updatedCourse) => {
   // use the update course mutation to add students
   // maybe refactor the api later to use student ids?
   const updateCourseMutation = `
-  mutation updateCourseStudents($input: UpdateCourseInput!){
+  mutation updateCourse($input: UpdateCourseInput!){
 
     updateCourse(input: $input){
       id
@@ -136,13 +167,16 @@ export const updateCourse = async (...params) => {
   }
   `
   try {
-    if (!params.id) {
+    if (!id) {
       throw new Error('A course Id is required to update a course');
     }
     const { data } = await API.graphql(graphqlOperation(updateCourseMutation, {
-      input: { ...params }
+      input: { ...updatedCourse, id }
     }));
+    // update the courses context
+    courseDispatch({ type: courseActions.UPDATE_COURSE, course: data.updateCourse });
     // send back the updated student list on success
+
     return { error: null, course: data.updateCourse }
   } catch (error) { return { error } }
 }

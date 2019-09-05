@@ -18,7 +18,7 @@ export default styled.button`
   }
 
   &.secondary {
-    padding: .8rem 0;
+
     color: var(--color-neutral-8);
   }
 

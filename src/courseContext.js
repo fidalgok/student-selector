@@ -5,6 +5,9 @@ const CourseDispatchContext = React.createContext();
 
 const courseActions = {
   LOAD_COURSES: 'LOAD_COURSES',
+  DELETE_COURSE: 'DELETE_COURSE',
+  CREATE_COURSE: 'CREATE_COURSE',
+  UPDATE_COURSE: 'UPDATE_COURSE',
 };
 
 function courseReducer(state, action) {
@@ -12,6 +15,21 @@ function courseReducer(state, action) {
     case courseActions.LOAD_COURSES: {
       return {
         courses: [...action.courses]
+      }
+    }
+    case courseActions.DELETE_COURSE: {
+      return {
+        courses: state.courses.filter(c => c.id !== action.courseId)
+      }
+    }
+    case courseActions.CREATE_COURSE: {
+      return {
+        courses: [action.course, ...state.courses]
+      }
+    }
+    case courseActions.UPDATE_COURSE: {
+      return {
+        courses: state.courses.map(c => c.id === action.course.id ? { ...c, ...action.course } : c)
       }
     }
     default: return state;
