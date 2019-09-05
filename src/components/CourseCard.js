@@ -98,8 +98,9 @@ const SessionsList = (props) => {
               status={props.activeSession.status}
             />
             <SessionInfo>
-              <span>Remaining Students: </span><span>{props.activeSession.remainingStudents.length}</span>
-              <span>Called Students: </span><span>{props.activeSession.calledStudents.length}</span>
+              <Button className="secondary" as={Link} to={`/course/${props.courseId}/session`}>Resume Session</Button>
+              <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.remainingStudents.length}</span>
+              <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.calledStudents.length}</span>
             </SessionInfo>
           </ListItem>)}
         {props.completedSessions.length ? props.completedSessions.map(session => (
@@ -154,7 +155,7 @@ const CourseCard = ({ course, ...props }) => {
     </StudentInfo>
 
     <div>
-      <SessionsList completedSessions={completedSessions} activeSession={activeSession} />
+      <SessionsList completedSessions={completedSessions} activeSession={activeSession} courseId={course.id} />
     </div>
   </CourseContainer>);
 }
