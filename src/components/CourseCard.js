@@ -53,7 +53,7 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: flex-start;;
   align-items: center;
-
+  margin-bottom: 1.2rem;
   span.status{
     border-radius: 25px;
     font-size: 1.2rem;
@@ -91,18 +91,22 @@ const SessionsList = (props) => {
           </ListItem>
         )}
         {props.activeSession && (
-          <ListItem key={props.activeSession.id}>
+          <>
+            <h3>Active Session:</h3>
+            <ListItem key={props.activeSession.id}>
 
-            <SessionHeader
-              createdAt={props.activeSession.createdAt}
-              status={props.activeSession.status}
-            />
-            <SessionInfo>
-              <Button className="secondary" as={Link} to={`/course/${props.courseId}/session`}>Resume Session</Button>
-              <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.remainingStudents.length}</span>
-              <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.calledStudents.length}</span>
-            </SessionInfo>
-          </ListItem>)}
+              <SessionHeader
+                createdAt={props.activeSession.createdAt}
+                status={props.activeSession.status}
+              />
+              <SessionInfo>
+                <Button className="primary" as={Link} to={`/course/${props.courseId}/session`}>Resume Session</Button>
+                <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.remainingStudents.length}</span>
+                <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.calledStudents.length}</span>
+              </SessionInfo>
+            </ListItem>
+          </>
+        )}
         {props.completedSessions.length ? props.completedSessions.map(session => (
           <ListItem key={session.id}>
             <SessionInfo>

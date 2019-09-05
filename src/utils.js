@@ -111,7 +111,11 @@ export async function createCourse(courseName) {
         students: [],
       }
     }));
-    return { error: null, course: data.createCourse }
+    const course = {
+      ...data.createCourse,
+      sessions: data.createCourse.sessions.items.map(session => ({ ...session }))
+    }
+    return { error: null, course }
   } catch (error) {
     return { error }
   }
