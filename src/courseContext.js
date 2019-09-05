@@ -8,6 +8,8 @@ const courseActions = {
   DELETE_COURSE: 'DELETE_COURSE',
   CREATE_COURSE: 'CREATE_COURSE',
   UPDATE_COURSE: 'UPDATE_COURSE',
+  CREATE_SESSION: 'CREATE_SESSION',
+  UPDATE_SESSION: 'UPDATE_SESSION',
 };
 
 function courseReducer(state, action) {
@@ -30,6 +32,23 @@ function courseReducer(state, action) {
     case courseActions.UPDATE_COURSE: {
       return {
         courses: state.courses.map(c => c.id === action.course.id ? { ...c, ...action.course } : c)
+      }
+    }
+    case courseActions.UPDATE_SESSION: {
+      const foundCourse = state.courses.find(c => c.id === action.course.id);
+
+      const updateSessions = () => {
+        if (foundCourse.sessions.length) {
+          // course has sessions need to merge the right one
+          return foundCourse.sessions.map(seshy => {
+            return seshy.id === action.session.id ? action.session : seshy;
+          })
+        } else {
+          return [action.session]
+        }
+      }
+      return {
+        courses: state.courses.map(c => c.id === action.course.id ? { ...c, sessions: updateSessions() } : c)
       }
     }
     default: return state;
