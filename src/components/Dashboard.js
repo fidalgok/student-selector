@@ -39,7 +39,7 @@ const Dashboard = (props) => {
     }
     return (
       <>
-        {courses.map(c => <CourseCard course={c} setShowCreateCourse={setShowCreateCourse} key={c.id} deleteCourse={(courseId) => courseDispatch({ type: courseActions.DELETE_COURSE, courseId })} />)}
+        {courses.map(c => <CourseCard course={c} history={props.history} setShowCreateCourse={setShowCreateCourse} key={c.id} deleteCourse={(courseId) => courseDispatch({ type: courseActions.DELETE_COURSE, courseId })} />)}
       </>
     )
   }

@@ -134,7 +134,9 @@ const CourseCard = ({ course, ...props }) => {
     const { error } = await createSession(courseDispatch, course.id, course.students);
     if (error) {
       console.log('error creating session', error);
+      return;
     }
+    props.history.push(`/course/${course.id}/session`);
   }
   return (<CourseContainer key={course.id}>
     <CourseActions>
