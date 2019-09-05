@@ -60,8 +60,16 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
     setUpdatedStudents([...updatedStudents]);
   }
 
-  function handleDeleteStudentClick(e) {
+  async function handleDeleteStudentClick(e) {
     const studentId = e.target.dataset.id;
+    const filteredStudents = updatedStudents.filter(s => s.id !== studentId).map(s => ({ name: s.name }));
+    try {
+      const { error } = await deleteCourseStudent(courseDispatch, course.id, filteredStudents);
+      if (error) throw new Error(error);
+
+    } catch (error) {
+      console.log('error deleting student: ', error);
+    }
 
   }
 
@@ -100,6 +108,10 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   return renderEditCourse();
 }
 
+function CourseStudentList(props) {
+
+}
+
 function EditStudent({ student, handleCancel, courseDispatch, updatedStudents }) {
   const [value, setValue] = React.useState(student.name);
   const handleChange = (e) => setValue(e.target.value);
@@ -114,12 +126,16 @@ function EditStudent({ student, handleCancel, courseDispatch, updatedStudents })
     // map over students and update the appropriate one, change the data back to what the db is expecting!
     const studentList = updatedStudents.map(s => s.id === studentId ? { name: value } : { name: s.name });
     // update the students in the DB
+    try {
 
-    const { error, students } = await updateCourseStudents(student.courseId, studentList);
+      const { error, students } = await updateCourseStudents(student.courseId, studentList);
 
-    if (error) throw new Error(error);
-    // update local state
-    courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: student.courseId, students } });
+      if (error) throw new Error(error);
+      // update local state
+      courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: student.courseId, students } });
+    } catch (error) {
+      console.log(error);
+    }
 
   }
 

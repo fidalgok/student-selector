@@ -146,7 +146,6 @@ export const deleteCourseStudent = async (courseDispatch, courseId, students) =>
       }
     }));
     // update the courseContext
-    debugger;
     courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: courseId, students: data.updateCourse.students } });
   } catch (err) { return { error: err } }
 }
