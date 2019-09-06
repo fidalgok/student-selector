@@ -2,7 +2,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { courseActions } from './courseContext';
 
 // random num generator
-export function getRandomNumber(max) {
+export function getRandomArrayIdx(max) {
   return Math.floor((Math.random() * max));
 }
 
@@ -259,6 +259,7 @@ export const updateSession = async (courseDispatch = () => { }, updatedSession =
   // update session details, generic for updating session details
   // will be passed required param id
   // can be passed optional params, calledStudents, remainingStudents, status
+
   const updateSessionMutation = `
     mutation updateSession($input: UpdateSessionInput!) {
       updateSession(input: $input){
@@ -270,12 +271,14 @@ export const updateSession = async (courseDispatch = () => { }, updatedSession =
         calledStudents{
           student{name}
           score
+          calledDate
         }
         remainingStudents{
           name
         }
       }
     }`
+
   try {
     const { data } = await API.graphql(graphqlOperation(updateSessionMutation, {
       input: {
@@ -285,9 +288,18 @@ export const updateSession = async (courseDispatch = () => { }, updatedSession =
         status: sessionStatus
       }
     }));
+    debugger;
+    // sort called students by called Date
+    data.updateSession.calledStudents.sort((a, b) => {
+      // sorts so latest date is last in array
+      if (a.calledDate < b.calledDate) return -1;
+      if (a.calledDate > b.calledDate) return 1;
+      return 0;
+    });
+
     courseDispatch({
       type: courseActions.UPDATE_SESSION, course: {
-        id: updatedSession.courseId
+        id: data.updateSession.course.id
       },
       session: data.updateSession
     });

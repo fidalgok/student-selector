@@ -44,6 +44,7 @@ function courseReducer(state, action) {
             return seshy.id === action.session.id ? action.session : seshy;
           })
         } else {
+          // first session created, just return it in an array
           return [action.session]
         }
       }

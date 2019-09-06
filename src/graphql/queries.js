@@ -52,6 +52,7 @@ export const getSession = `query GetSession($id: ID!) {
         name
       }
       score
+      calledDate
     }
     remainingStudents {
       name
@@ -84,6 +85,7 @@ export const listSessions = `query ListSessions(
       id
       calledStudents {
         score
+        calledDate
       }
       remainingStudents {
         name

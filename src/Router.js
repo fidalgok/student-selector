@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 const AppRouter = (props) => {
 
   function getActiveSession(courseId, courses) {
+
     const foundCourse = getCourseById(courseId, courses);
     const activeSession = foundCourse.sessions.find(sesh => sesh.status === 'NEW' || 'IN_PROGRESS');
     return activeSession;

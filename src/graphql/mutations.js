@@ -72,6 +72,7 @@ export const createSession = `mutation CreateSession($input: CreateSessionInput!
         name
       }
       score
+      calledDate
     }
     remainingStudents {
       name
@@ -102,6 +103,7 @@ export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!
         name
       }
       score
+      calledDate
     }
     remainingStudents {
       name
@@ -132,6 +134,7 @@ export const deleteSession = `mutation DeleteSession($input: DeleteSessionInput!
         name
       }
       score
+      calledDate
     }
     remainingStudents {
       name

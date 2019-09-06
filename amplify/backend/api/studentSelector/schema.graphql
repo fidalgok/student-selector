@@ -23,6 +23,7 @@ type Session @model(subscriptions: null)
 type SessionScore {
     student: Student!
     score: String
+    calledDate: String!
 }
 
 type Student {

@@ -54,8 +54,10 @@ const LoggedIn = (props) => {
       <Header />
       <AppContainer>
         <Main>
-          <Router courses={courses}>
-          </Router>
+          {loading && <div>Loading</div>}
+          {error && <div>{JSON.stringify(error, null, 2)}</div>}
+          {!loading && !error && <Router courses={courses}>
+          </Router>}
         </Main>
       </AppContainer>
     </>
