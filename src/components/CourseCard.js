@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import BaseButton from './styled/Button';
 import { deleteCourse, formatDate, createSession } from '../utils';
 import { useCourseDispatch } from '../courseContext';
+import { useSessionDispatch, useSessionState } from '../sessionContext';
 
 const CourseContainer = styled.section`
   padding: 2.4rem 0 0 0;
@@ -77,46 +78,48 @@ const SessionHeader = ({ createdAt = new Date(), status = 'NEW' }) => {
   )
 }
 
-const SessionsList = (props) => {
+const SessionsList = ({ courseId, activeSession, completedSessions }) => {
 
   const renderSessions = () => {
-
     return (
       <StyledList>
-        {!props.activeSession && !props.completedSessions.length && (
+        {!activeSession && !completedSessions.length && (
           <ListItem>
             <SessionInfo>
               This course does not have any active sessions.
             </SessionInfo>
           </ListItem>
         )}
-        {props.activeSession && (
+        {activeSession && (
           <>
             <h3>Active Session:</h3>
-            <ListItem key={props.activeSession.id}>
+            <ListItem key={activeSession.id}>
 
               <SessionHeader
-                createdAt={props.activeSession.createdAt}
-                status={props.activeSession.status}
+                createdAt={activeSession.createdAt}
+                status={activeSession.status}
               />
               <SessionInfo>
-                <Button className="primary" as={Link} to={`/course/${props.courseId}/session`}>Resume Session</Button>
-                <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.remainingStudents.length}</span>
-                <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{props.activeSession.calledStudents.length}</span>
+                <Button className="primary" as={Link} to={`/session/${activeSession.id}`}>Resume Session</Button>
+                <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.remainingStudents.length}</span>
+                <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.calledStudents.length}</span>
               </SessionInfo>
             </ListItem>
           </>
         )}
-        {props.completedSessions.length ? props.completedSessions.map(session => (
-          <ListItem key={session.id}>
-            <SessionInfo>
+        {completedSessions.length ? (<>
 
-              <SessionHeader createdAt={session.createdAt} status={session.status} />
-              <span>Remaining Students: </span><span>{session.remainingStudents.length}</span>
-              <span>Called Students: </span><span>{session.calledStudents.length}</span>
-            </SessionInfo>
-          </ListItem>
-        )) : null}
+          <div>Completed Sessions</div>
+          {completedSessions.map(session => (
+            <ListItem key={session.id}>
+              <SessionInfo>
+                <SessionHeader createdAt={session.createdAt} status={session.status} />
+                <span>Remaining Students: </span><span>{session.remainingStudents.length}</span>
+                <span>Called Students: </span><span>{session.calledStudents.length}</span>
+              </SessionInfo>
+            </ListItem>
+          ))}
+        </>) : null}
 
       </StyledList>
 
@@ -127,41 +130,45 @@ const SessionsList = (props) => {
 }
 
 const CourseCard = ({ course, ...props }) => {
-  const courseDispatch = useCourseDispatch();
-  const activeSession = course.sessions.find(sesh => sesh.status === 'IN_PROGRESS' || 'NEW');
-  const completedSessions = course.sessions.filter(sesh => sesh.status === 'COMPLETE');
-
+  const sessionDispatch = useSessionDispatch();
+  const { sessions } = useSessionState();
+  const courseSessions = sessions.filter(sesh => sesh.course.id === course.id);
+  const activeSession = courseSessions.find(sesh => sesh.status === 'NEW' || sesh.status === 'IN_PROGRESS');
+  const completedSessions = courseSessions.filter(sesh => sesh.status === 'COMPLETE');
   const handleDelete = async () => {
     await deleteCourse(course.id);
     props.deleteCourse(course.id);
   }
+
   const handleAddSession = async () => {
-    const { error } = await createSession(courseDispatch, course.id, course.students);
+    const { error, session } = await createSession(sessionDispatch, course.id, course.students);
     if (error) {
       console.log('error creating session', error);
       return;
     }
-    props.history.push(`/course/${course.id}/session`);
+    props.history.push(`/session/${session.id}`);
   }
-  return (<CourseContainer key={course.id}>
-    <CourseActions>
-      <CourseTitle>{course.name}</CourseTitle>
-      {!activeSession && <Button
-        className="primary"
-        onClick={handleAddSession}
-      >New Session</Button>}
 
-      <Button className="secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
-      {!course.sessions.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
-    </CourseActions>
-    <StudentInfo>
-      {course.students.length} students
+  return (
+    <CourseContainer key={course.id}>
+      <CourseActions>
+        <CourseTitle>{course.name}</CourseTitle>
+        {!activeSession && <Button
+          className="primary"
+          onClick={handleAddSession}
+        >New Session</Button>}
+
+        <Button className="secondary" as={Link} to={`/session/`}>Manage Students</Button>
+        {!course.sessions.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
+      </CourseActions>
+      <StudentInfo>
+        {course.students.length} students
     </StudentInfo>
 
-    <div>
-      <SessionsList completedSessions={completedSessions} activeSession={activeSession} courseId={course.id} />
-    </div>
-  </CourseContainer>);
+      <div>
+        <SessionsList courseId={course.id} activeSession={activeSession} completedSessions={completedSessions} />
+      </div>
+    </CourseContainer>);
 }
 
 export default CourseCard;

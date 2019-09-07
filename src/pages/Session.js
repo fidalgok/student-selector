@@ -1,46 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import BaseButton from '../components/styled/Button';
-import { getRandomArrayIdx, updateSession } from '../utils';
-import { useCourseDispatch } from '../courseContext';
+import { getRandomArrayIdx, updateSession, createSession } from '../utils';
+import { useCourseState } from '../courseContext';
+import { useSessionDispatch } from '../sessionContext';
 
-/**************
-<section>
 
-    <div class="card">
-      <p class="ta-c">Students Left: 19</p>
-    </div>
-    <div class="card">
-      <h3>Called Students</h3>
-      <ul class="called-student-list">
-        <li>
-          <span>Joe Schmo</span>
-          <div class="called-student-score score-none">
-            Not scored
-          </div>
-        </li>
-        <li>
-          <span>Jane Doe</span>
-          <div class="called-student-score score-checkminus">
-            Check Minus
-          </div>
-        </li>
-        <li>
-          <span>Sue Smith</span>
-          <div class="called-student-score score-check">
-            Check
-          </div>
-        </li>
-        <li>
-          <span>Curtis Hall</span>
-          <div class="called-student-score score-checkplus">
-            Check Plus
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-  ********/
 
 const Section = styled.section`
  margin-top: 1.2rem;
@@ -56,22 +21,18 @@ const Section = styled.section`
  li {
   padding: 2.4rem 0;
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
  }
 
  li:not(:last-of-type){
-   border-bottom: var(--color-neutral-2);
+   border-bottom: 1px solid var(--color-neutral-2);
  }
-
- li span{
-  display: inline-block;
-  margin-bottom: 8px;
-  padding: 1.2rem .4rem;
-}
-
 `;
 
 const SectionContainer = styled.div`
-  max-width: 300px;
+  width: 300px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -101,17 +62,70 @@ const SectionHeading = styled.p`
   margin:0 0 2.4rem;
 `;
 
+const CalledStudentScore = styled.div`
+
+  border-radius: 15px;
+  padding: .4rem .8rem;
+
+
+
+&.score-none {
+  background: #E4E7EB;
+}
+
+&.score-checkminus {
+  background: #FF9B9B;
+  color: hsl(348, 94%, 15%);
+}
+
+&.score-check {
+  background: #A7D8F0;
+  color: hsl(200, 82%, 18%);
+}
+&.score-checkplus {
+  background: #8EEDC7;
+  color: hsl(170, 97%, 10%);
+}
+`;
+
+const getScoreInfo = (score) => {
+  switch (score) {
+    case null: {
+      return {
+        className: 'score-none',
+        value: 'not scored'
+      }
+    }
+    case 'check_minus': {
+      return {
+        className: 'score-checkminus',
+        value: 'check minus'
+      }
+    }
+    case 'check': {
+      return {
+        className: 'score-check',
+        value: 'check'
+      }
+    }
+    case 'check_plus': {
+      return {
+        className: 'score-checkplus',
+        value: 'check plus'
+      }
+    }
+  }
+}
+
 const Session = ({ session, ...props }) => {
-  console.log(session);
-  const [isSessionComplete, setIsSessionComplete] = React.useState(session.remainingStudents.length === 0);
-  const courseDispatch = useCourseDispatch();
-  const calledStudent = session.calledStudents.length ? session.calledStudents[session.calledStudents.length - 1] : {
+
+  const [loadingMessage, setLoadingMessage] = React.useState(null);
+  const sessionDispatch = useSessionDispatch();
+  const { courses } = useCourseState();
+  if (!session) return <div>Whoops, no session found</div>
+  const calledStudent = session.calledStudents.length ? session.calledStudents[0] : {
     student: { name: 'Call a Student' }
   };
-  React.useEffect(() => {
-
-    if (session.remainingStudents.length === 0) setIsSessionComplete(true)
-  })
   const handleNextStudent = async () => {
     let studentList = session.remainingStudents.slice();
     let randomStudentIndex = getRandomArrayIdx(studentList.length);
@@ -121,7 +135,7 @@ const Session = ({ session, ...props }) => {
 
     try {
 
-      const { error } = await updateSession(courseDispatch, {
+      const { error } = await updateSession(sessionDispatch, {
         id: session.id,
         remainingStudents: studentList,
         calledStudents
@@ -133,8 +147,38 @@ const Session = ({ session, ...props }) => {
     }
   }
 
-  const handleStudentScore = () => {
+  const handleStudentScore = async (e) => {
+    // update the students score in the DB
+    setLoadingMessage('Scoring Student...')
+    const score = e.target.dataset.score;
+    // update the current students info and send along the session info
 
+    let updatedCalledStudents = session.calledStudents.map(seshScore => seshScore.calledDate === calledStudent.calledDate ? { ...seshScore, score } : seshScore);
+
+    try {
+      const { error } = await updateSession(sessionDispatch, { id: session.id, calledStudents: updatedCalledStudents }, session.status);
+      if (error) throw new Error(JSON.stringify(error))
+      setLoadingMessage(null)
+    } catch (error) {
+      console.log(error);
+      setLoadingMessage(null)
+    }
+  }
+
+  const handleCompleteSession = async () => {
+
+    const { error } = await updateSession(sessionDispatch, { id: session.id }, 'COMPLETE');
+    if (error) console.log('error completing session', JSON.stringify(error, null, 2));
+
+  }
+
+  const handleAddSession = async () => {
+    const course = courses.find(c => c.id === session.course.id);
+    const { error } = await createSession(sessionDispatch, session.course.id, course.students);
+    if (error) {
+      console.log('error creating session', error);
+      return;
+    }
   }
   return (
     <>
@@ -144,22 +188,31 @@ const Session = ({ session, ...props }) => {
           {!!session.calledStudents.length && (
             <>
               <StudentRatingContainer >
-                <Button className="secondary" onClick={handleStudentScore}> check minus</Button>
-                <Button className="secondary" onClick={handleStudentScore}> check </Button>
-                <Button className="secondary" onClick={handleStudentScore}> check plus</Button>
+                <Button className="secondary" data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
+                <Button className="secondary" data-score="check" onClick={handleStudentScore}> check </Button>
+                <Button className="secondary" data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
               </StudentRatingContainer>
             </>
           )
           }
-          {session.calledStudents.length ? (
-            <Button className="primary" onClick={handleNextStudent} disabled={isSessionComplete}>
-              Next Student
+          {session.status === 'NEW' && <Button className="primary" onClick={handleNextStudent} disabled={session.status === 'COMPLETE' || loadingMessage}>
+            Begin Session
+        </Button>}
+          {session.status === 'IN_PROGRESS' && (
+            <Button className="primary" onClick={handleNextStudent} disabled={loadingMessage}>
+              {loadingMessage || 'Next Student'}
+            </Button>
+          )}
+          {session.remainingStudents.length === 0 && (
+            <Button className="primary" onClick={handleCompleteSession} disabled={loadingMessage}>
+              Complete Session
+      </Button>
+          )}
+          {session.status === 'COMPLETE' && (
+            <Button className="primary" onClick={handleAddSession} disabled={loadingMessage}>
+              Start New Session?
         </Button>
-          ) : (
-              <Button className="primary" onClick={handleNextStudent} disabled={isSessionComplete}>
-                Begin Session
-        </Button>
-            )}
+          )}
         </SectionContainer>
       </Section>
       <Section>
@@ -172,6 +225,19 @@ const Session = ({ session, ...props }) => {
           <SectionHeading>
             Called Students
           </SectionHeading>
+          <ul >
+            {session.calledStudents.map(({ student, score, calledDate }) => {
+              const { className, value } = getScoreInfo(score);
+              return (
+                <li key={calledDate}>
+                  <span>{student.name}</span>
+                  <CalledStudentScore className={className}>
+                    {value}
+                  </CalledStudentScore>
+                </li>
+              )
+            })}
+          </ul>
         </SectionContainer>
       </Section>}
     </>

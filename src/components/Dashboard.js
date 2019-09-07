@@ -26,10 +26,10 @@ const DashboardButton = styled(Button)`
 const Dashboard = (props) => {
   const courseDispatch = useCourseDispatch();
   const [showCreateCourse, setShowCreateCourse] = React.useState(false);
-  const { courses } = props;
+  const { courses, sessions } = props;
 
   function renderDashboard() {
-    if (!courses) return 'loading';
+    if (!courses || !sessions) return 'loading';
     if (!courses.length) {
       return (
         <div>

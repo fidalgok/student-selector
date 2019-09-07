@@ -1,5 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { courseActions } from './courseContext';
+import { sessionActions } from './sessionContext';
 
 // random num generator
 export function getRandomArrayIdx(max) {
@@ -56,6 +57,7 @@ export const listCourses = async () => {
             name
           }
           sessions{
+            nextToken
             items{
               id
               status
@@ -65,6 +67,7 @@ export const listCourses = async () => {
                   name
                 }
                 score
+                calledDate
               }
               remainingStudents{
                 name
@@ -77,6 +80,9 @@ export const listCourses = async () => {
   `;
   try {
     const { data } = await API.graphql(graphqlOperation(listCourses));
+    // while (data.listCourses.sessions.nextToken){
+    //   const nextSessions = await API.graphql(graphqlOperation())
+    // }
     const courses = data.listCourses.items.map(course => ({
       ...course,
       sessions: course.sessions.items.map(session => ({ ...session })),
@@ -213,21 +219,60 @@ export const deleteCourse = async (courseId) => {
   } catch (error) { return { error } }
 }
 
-export const createSession = async (courseDispatch = () => { }, courseId = '', studentList = []) => {
-  // defaults for getting a session up and running
-  //CreateSessionInput
-  //   id: ID
-  // calledStudents: [SessionScoreInput]!
-  // remainingStudents: [StudentInput]!
-  // status: SessionStatus! default NEW
-  // created_at: String
-  // updated_at: String
-  // sessionCourseId: ID!
+
+export const listSessions = async (sessionDispatch) => {
+  const LIST_SESSIONS_QUERY = `
+    query listSessions($nextToken: String){
+      listSessions(nextToken: $nextToken){
+        nextToken
+            items{
+              id
+              status
+              createdAt
+              course{
+                id
+                name
+              }
+              calledStudents{
+                student{
+                  name
+                }
+                score
+                calledDate
+              }
+              remainingStudents{
+                name
+              }
+            }
+      }
+    }
+  `;
+  let allSessions = [];
+  try {
+    const { data } = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY));
+    allSessions = [...data.listSessions.items];
+    if (data.listSessions.nextToken) {
+      while (data.listSessions.nextToken) {
+        const { data } = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY), { nextToken: data.listSessions.nextToken });
+        allSessions = [...allSessions, ...data.listSessions.items]
+      }
+    }
+    sessionDispatch({ type: sessionActions.LOAD_SESSIONS, sessions: allSessions });
+    return { error: null }
+  } catch (error) { return { error } }
+}
+
+export const createSession = async (sessionDispatch = () => { }, courseId = '', studentList = []) => {
+
   const createSessionMutation = `
 mutation createSession($input: CreateSessionInput!) {
   createSession(input: $input){
     id
     status
+    course{
+      id
+      name
+    }
     remainingStudents{
       name
     }
@@ -245,17 +290,15 @@ mutation createSession($input: CreateSessionInput!) {
         status: 'NEW'
       }
     }));
-    courseDispatch({
-      type: courseActions.UPDATE_SESSION, course: {
-        id: courseId,
-      },
+    sessionDispatch({
+      type: sessionActions.CREATE_SESSION,
       session: data.createSession
     })
-    return { error: null }
+    return { error: null, session: data.createSession }
   } catch (error) { return { error } }
 }
 
-export const updateSession = async (courseDispatch = () => { }, updatedSession = {}, sessionStatus = 'IN_PROGRESS') => {
+export const updateSession = async (sessionDispatch = () => { }, updatedSession = {}, sessionStatus = 'IN_PROGRESS') => {
   // update session details, generic for updating session details
   // will be passed required param id
   // can be passed optional params, calledStudents, remainingStudents, status
@@ -265,9 +308,7 @@ export const updateSession = async (courseDispatch = () => { }, updatedSession =
       updateSession(input: $input){
         id
         status
-        course{
-          id
-        }
+        course{id}
         calledStudents{
           student{name}
           score
@@ -282,25 +323,21 @@ export const updateSession = async (courseDispatch = () => { }, updatedSession =
   try {
     const { data } = await API.graphql(graphqlOperation(updateSessionMutation, {
       input: {
-        id: updatedSession.id,
-        calledStudents: updatedSession.calledStudents,
-        remainingStudents: updatedSession.remainingStudents,
+        ...updatedSession,
         status: sessionStatus
       }
     }));
-    debugger;
+
     // sort called students by called Date
     data.updateSession.calledStudents.sort((a, b) => {
-      // sorts so latest date is last in array
-      if (a.calledDate < b.calledDate) return -1;
-      if (a.calledDate > b.calledDate) return 1;
+      // sorts so latest date is first in array
+      if (a.calledDate > b.calledDate) return -1;
+      if (a.calledDate < b.calledDate) return 1;
       return 0;
     });
 
-    courseDispatch({
-      type: courseActions.UPDATE_SESSION, course: {
-        id: data.updateSession.course.id
-      },
+    sessionDispatch({
+      type: sessionActions.UPDATE_SESSION,
       session: data.updateSession
     });
     return { error: null }

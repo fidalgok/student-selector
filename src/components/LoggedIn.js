@@ -3,8 +3,9 @@ import styled from '@emotion/styled';
 import Header from '../layout/Header';
 import Container from '../layout/Container';
 import Router from '../Router';
-import { CourseProvider, useCourseState, useCourseDispatch, courseActions } from '../courseContext'
-import { listCourses } from '../utils';
+import { CourseProvider, useCourseState, useCourseDispatch, courseActions } from '../courseContext';
+import { SessionProvider, useSessionState, useSessionDispatch, sessionActions } from '../sessionContext';
+import { listCourses, listSessions } from '../utils';
 
 export const AppContainer = styled(Container)`
   &::before {
@@ -29,14 +30,18 @@ export const Main = styled.main`
 
 const LoggedIn = (props) => {
   const { courses } = useCourseState();
+  const { sessions } = useSessionState();
   const courseDispatch = useCourseDispatch();
+  const sessionDispatch = useSessionDispatch();
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
 
-  const fetchCourses = async () => {
+  const fetchData = async () => {
     try {
-      const { error: fetchError, courses: courseList } = await listCourses();
-      if (fetchError) throw new Error(fetchError);
+      const { error: courseError, courses: courseList } = await listCourses();
+      const { error: sessionError } = await listSessions(sessionDispatch);
+      if (sessionError) throw new Error(sessionError);
+      if (courseError) throw new Error(courseError);
       courseDispatch({ type: courseActions.LOAD_COURSES, courses: courseList })
       setLoading(false);
     } catch (err) {
@@ -46,7 +51,7 @@ const LoggedIn = (props) => {
   }
 
   React.useEffect(() => {
-    fetchCourses();
+    fetchData();
   }, []);
 
   return (
@@ -56,7 +61,7 @@ const LoggedIn = (props) => {
         <Main>
           {loading && <div>Loading</div>}
           {error && <div>{JSON.stringify(error, null, 2)}</div>}
-          {!loading && !error && <Router courses={courses}>
+          {!loading && !error && <Router courses={courses} sessions={sessions}>
           </Router>}
         </Main>
       </AppContainer>
@@ -66,9 +71,12 @@ const LoggedIn = (props) => {
 
 const LoggedInWithCourses = (props) => {
   return (
-    <CourseProvider>
-      <LoggedIn />
-    </CourseProvider>
+    <SessionProvider>
+
+      <CourseProvider>
+        <LoggedIn />
+      </CourseProvider>
+    </SessionProvider>
   )
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import EditCourse from './components/EditCourse';
 import CreateCourse from './components/CreateCourse';
 import Session from './pages/Session';
@@ -7,24 +7,23 @@ import Dashboard from './components/Dashboard';
 
 const AppRouter = (props) => {
 
-  function getActiveSession(courseId, courses) {
+  function getActiveSession(id, sessions) {
 
-    const foundCourse = getCourseById(courseId, courses);
-    const activeSession = foundCourse.sessions.find(sesh => sesh.status === 'NEW' || 'IN_PROGRESS');
+    const activeSession = sessions.find(sesh => sesh.id === id);
     return activeSession;
   }
-  function getCourseById(courseId, courses) {
-    const foundCourse = courses.find(c => c.id === courseId);
-    return foundCourse;
+
+  function getCourseById(id, courses) {
+    return courses.find(c => c.id === id);
   }
   return (
     <Router>
       {props.children}
       <Switch>
-        <Route exact path="/" render={(routerProps) => <Dashboard {...routerProps} courses={props.courses} />} />
+        <Route exact path="/" render={(routerProps) => <Dashboard {...routerProps} {...props} />} />
         <Route exact path="/course/:id/edit" render={(routerProps) => <EditCourse {...routerProps} course={getCourseById(routerProps.match.params.id, props.courses)} />} />
         <Route exact path="/course/new" render={(routerProps) => <CreateCourse {...routerProps} />} />
-        <Route exact path="/course/:courseId/session/" render={(routerProps) => <Session {...routerProps} session={getActiveSession(routerProps.match.params.courseId, props.courses)} />} />
+        <Route exact path="/session/:id" render={(routerProps) => <Session {...routerProps} session={getActiveSession(routerProps.match.params.id, props.sessions)} />} />
       </Switch>
     </Router>
   )

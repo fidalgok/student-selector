@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createCourse, updateCourseStudents, updateCourse } from '../utils';
+import { createCourse } from '../utils';
 import { useCourseDispatch, courseActions } from '../courseContext';
 
-import { CreateStudentForm } from './CreateStudentForm'
+import { CreateStudentForm } from './CreateStudentForm';
+import { Input } from './styled/Form';
+import Button from './styled/Button';
 
 const initialState = {
   course: null,
@@ -41,7 +43,7 @@ const CreateCourse = (props) => {
         return (
           <>
             <h2>Add students to {state.course.name}</h2>
-            <CreateStudentForm setState={dispatch} setFormType={setFormType} courseDispatch={courseDispatch} courseId={state.course.id} students={state.students} />
+            <CreateStudentForm setState={dispatch} setFormType={setFormType} courseDispatch={courseDispatch} courseId={state.course.id} studentList={state.students} />
             <StudentList students={state.students} />
           </>
         )
@@ -81,12 +83,12 @@ export const CreateCourseForm = (props) => {
       <h2>Create Course</h2>
       <div>
         <label htmlFor="courseName">Course Name</label>
-        <input type="text" id="courseName" name="courseName" onChange={(e) => {
+        <Input type="text" id="courseName" name="courseName" onChange={(e) => {
           setCourseName(e.target.value)
         }
         }
         />
-        <button>Create</button>
+        <Button>Create</Button>
       </div>
     </form>
   )
