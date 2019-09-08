@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+//import CSVReader from 'react-csv-reader';
 import { courseActions } from '../courseContext';
 import { updateCourseStudents } from '../utils';
 import Button from './styled/Button';
@@ -45,6 +46,20 @@ export const CreateStudentForm = ({ courseId = '', studentList = [], courseDispa
     }
     setStudentName('');
   }
+
+  // const handleFileLoad = (data) => {
+  //   const header = data.slice(0, 1);
+  //   const students = data.slice(1);
+  //   let match = new RegExp('student name|student_name|studentname/', 'i');
+  //   if (header[0].find(heading => heading.match(match))) {
+  //     // found a match for student name
+  //     console.log({
+  //       header, students
+  //     })
+  //   }
+
+  // }
+
   return (
 
     <Form onSubmit={handleSubmit}>
@@ -58,6 +73,14 @@ export const CreateStudentForm = ({ courseId = '', studentList = [], courseDispa
           value={studentName}
         />
         <Button className="primary" type="submit">Create</Button>
+      </div>
+      <div>
+        {/* <CSVReader
+          cssClass="react-csv-input"
+          label="Select CSV student names"
+          onFileLoaded={handleFileLoad}
+
+        /> */}
       </div>
     </Form>
   )

@@ -8,7 +8,6 @@ import { useSessionDispatch } from '../sessionContext';
 
 
 const Section = styled.section`
- margin-top: 1.2rem;
  padding: 1.6rem 0;
  display: flex;
  justify-content: center;
@@ -40,7 +39,21 @@ const SectionContainer = styled.div`
 const Button = styled(BaseButton)`
   &.secondary {
     background: var(--color-neutral-2);
+    padding: 1rem .8rem;
   }
+  &.score-checkminus {
+  background: #FF9B9B;
+  color: hsl(348, 94%, 15%);
+}
+
+&.score-check {
+  background: #A7D8F0;
+  color: hsl(200, 82%, 18%);
+}
+&.score-checkplus {
+  background: #8EEDC7;
+  color: hsl(170, 97%, 10%);
+}
   &[disabled]{
     cursor: not-allowed;
   }
@@ -51,9 +64,9 @@ const CalledStudent = styled.p`
 `;
 
 const StudentRatingContainer = styled.div`
-   margin-bottom: 2.4rem;
+  margin-bottom: 2.4rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 `;
 
 const SectionHeading = styled.p`
@@ -174,23 +187,29 @@ const Session = ({ session, ...props }) => {
 
   const handleAddSession = async () => {
     const course = courses.find(c => c.id === session.course.id);
-    const { error } = await createSession(sessionDispatch, session.course.id, course.students);
-    if (error) {
-      console.log('error creating session', error);
+    const { error, session: newSession } = await createSession(sessionDispatch, session.course.id, course.students);
+    if (error || newSession.error) {
+      console.log('error creating session', error, newSession.error);
       return;
     }
+    props.history.push(`/session/${newSession.id}`);
   }
   return (
     <>
+      <Section>
+        <SectionContainer>
+          <p style={{ textAlign: 'center', margin: '0' }}> {session.course.name}</p>
+        </SectionContainer>
+      </Section>
       <Section>
         <SectionContainer>
           <CalledStudent>{calledStudent.student.name}</CalledStudent>
           {!!session.calledStudents.length && (
             <>
               <StudentRatingContainer >
-                <Button className="secondary" data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
-                <Button className="secondary" data-score="check" onClick={handleStudentScore}> check </Button>
-                <Button className="secondary" data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
+                <Button className={`secondary ${calledStudent.score === 'check_minus' ? 'score-checkminus' : ''}`} data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
+                <Button className={`secondary ${calledStudent.score === 'check' ? 'score-check' : ''}`} data-score="check" onClick={handleStudentScore}> check </Button>
+                <Button className={`secondary ${calledStudent.score === 'check_plus' ? 'score-checkplus' : ''}`} data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
               </StudentRatingContainer>
             </>
           )
@@ -198,12 +217,12 @@ const Session = ({ session, ...props }) => {
           {session.status === 'NEW' && <Button className="primary" onClick={handleNextStudent} disabled={session.status === 'COMPLETE' || loadingMessage}>
             Begin Session
         </Button>}
-          {session.status === 'IN_PROGRESS' && (
+          {session.status === 'IN_PROGRESS' && !!session.remainingStudents.length && (
             <Button className="primary" onClick={handleNextStudent} disabled={loadingMessage}>
               {loadingMessage || 'Next Student'}
             </Button>
           )}
-          {session.remainingStudents.length === 0 && (
+          {session.remainingStudents.length === 0 && session.status !== 'COMPLETE' && (
             <Button className="primary" onClick={handleCompleteSession} disabled={loadingMessage}>
               Complete Session
       </Button>

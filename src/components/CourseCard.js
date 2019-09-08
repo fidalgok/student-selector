@@ -40,7 +40,7 @@ const StyledList = styled.ul`
 `;
 
 const ListItem = styled.li`
-  margin: 0;
+  margin: 0 0 2.4rem;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -158,7 +158,7 @@ const CourseCard = ({ course, ...props }) => {
           onClick={handleAddSession}
         >New Session</Button>}
 
-        <Button className="secondary" as={Link} to={`/session/`}>Manage Students</Button>
+        <Button className="secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
         {!course.sessions.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
       </CourseActions>
       <StudentInfo>

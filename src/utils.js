@@ -46,10 +46,10 @@ export function formatDate(date = new Date(), delimeter = '/') {
 //   }
 // }
 
-export const listCourses = async () => {
+export const listCourses = async (limit = 20) => {
   const listCourses = `
-    query {
-      listCourses{
+    query listCourses($limit: Int){
+      listCourses(limit: $limit){
         items {
           id
           name
@@ -79,7 +79,7 @@ export const listCourses = async () => {
     }
   `;
   try {
-    const { data } = await API.graphql(graphqlOperation(listCourses));
+    const { data } = await API.graphql(graphqlOperation(listCourses, { limit }));
     // while (data.listCourses.sessions.nextToken){
     //   const nextSessions = await API.graphql(graphqlOperation())
     // }
@@ -220,10 +220,10 @@ export const deleteCourse = async (courseId) => {
 }
 
 
-export const listSessions = async (sessionDispatch) => {
+export const listSessions = async (sessionDispatch, limit = 30) => {
   const LIST_SESSIONS_QUERY = `
-    query listSessions($nextToken: String){
-      listSessions(nextToken: $nextToken){
+    query listSessions($nextToken: String, $limit: Int){
+      listSessions(nextToken: $nextToken, limit: $limit){
         nextToken
             items{
               id
@@ -249,14 +249,18 @@ export const listSessions = async (sessionDispatch) => {
   `;
   let allSessions = [];
   try {
-    const { data } = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY));
+    const { data } = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY, { limit }));
     allSessions = [...data.listSessions.items];
-    if (data.listSessions.nextToken) {
-      while (data.listSessions.nextToken) {
-        const { data } = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY), { nextToken: data.listSessions.nextToken });
-        allSessions = [...allSessions, ...data.listSessions.items]
+    let nextToken = data.listSessions.nextToken;
+
+    if (nextToken) {
+      while (nextToken) {
+        const res = await API.graphql(graphqlOperation(LIST_SESSIONS_QUERY, { nextToken: nextToken, limit }));
+        allSessions = [...allSessions, ...res.data.listSessions.items];
+        nextToken = res.data.listSessions.nextToken;
       }
     }
+
     sessionDispatch({ type: sessionActions.LOAD_SESSIONS, sessions: allSessions });
     return { error: null }
   } catch (error) { return { error } }
@@ -295,7 +299,7 @@ mutation createSession($input: CreateSessionInput!) {
       session: data.createSession
     })
     return { error: null, session: data.createSession }
-  } catch (error) { return { error } }
+  } catch (error) { return { error, session: {} } }
 }
 
 export const updateSession = async (sessionDispatch = () => { }, updatedSession = {}, sessionStatus = 'IN_PROGRESS') => {
