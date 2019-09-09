@@ -4,7 +4,7 @@ import Header from '../layout/Header';
 import Container from '../layout/Container';
 import Router from '../Router';
 import { CourseProvider, useCourseState, useCourseDispatch, courseActions } from '../courseContext';
-import { SessionProvider, useSessionState, useSessionDispatch, sessionActions } from '../sessionContext';
+import { SessionProvider, useSessionState, useSessionDispatch } from '../sessionContext';
 import { listCourses, listSessions } from '../utils';
 
 export const AppContainer = styled(Container)`

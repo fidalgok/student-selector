@@ -15,6 +15,15 @@ const Container = styled.div`
   border-bottom-right-radius: 15px;
 `;
 
+const ResetButton = styled(Button)`
+  background: none;
+  color: var(--color-neutral-8);
+  text-decoration: underline;
+  padding: 0;
+  display: inline;
+  font-weight:normal;
+`;
+
 const SignUp = (props) => {
   return (
     <Container>
@@ -54,6 +63,9 @@ const SignInForm = (props) => {
         <Button onClick={props.signIn} className="primary">
           Sign In
         </Button>
+        <div style={{ textAlign: 'center', marginTop: '1.6rem' }}>
+          <p>Forgot your password? <ResetButton onClick={() => props.setFormType('forgotPassword')}>Reset your password here.</ResetButton></p>
+        </div>
       </Form>
       <SignUp updateFormType={props.updateFormType} />
     </FormContainer>

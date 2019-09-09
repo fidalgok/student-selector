@@ -127,6 +127,7 @@ const getScoreInfo = (score) => {
         value: 'check plus'
       }
     }
+    default: throw new Error(`Invalid score type of ${score} found.`);
   }
 }
 

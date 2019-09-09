@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import BaseButton from './styled/Button';
 import { deleteCourse, formatDate, createSession } from '../utils';
-import { useCourseDispatch } from '../courseContext';
 import { useSessionDispatch, useSessionState } from '../sessionContext';
 
 const CourseContainer = styled.section`

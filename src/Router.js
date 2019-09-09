@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import EditCourse from './components/EditCourse';
 import CreateCourse from './components/CreateCourse';
 import Session from './pages/Session';

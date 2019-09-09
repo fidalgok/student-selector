@@ -2,11 +2,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 import uuid from 'uuid/v4';
 import { isEqual } from 'lodash/lang'
-import Input from './styled/Input';
 import { updateCourse, updateCourseStudents, deleteCourseStudent } from '../utils';
 import { useCourseDispatch, courseActions } from '../courseContext';
 import BaseButton from './styled/Button';
+import { InputDiv } from './styled/Input';
 import { CreateStudentForm } from './CreateStudentForm';
+import { EditCourseForm } from './CreateCourse';
 
 
 const Button = styled(BaseButton)`
@@ -14,44 +15,28 @@ const Button = styled(BaseButton)`
   padding: .8rem 1rem;
 `;
 
-const InputDiv = styled(Input)`
-  display: inline-block;
-  padding: 0 1rem;
-  width: auto;
 
-  &:focus-within {
-    border-bottom: 2px solid var(--color-secondary-5);
-    background: var(--color-neutral-1);
-  }
-
-  input{
-    border: none;
-    appearance: none;
-    background: none;
-    font-size: inherit;
-    color: inherit;
-    margin-right: 1.2rem;
-
-    &:focus{
-      outline: none;
-    }
-  }
-`;
 
 const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   // use updatedStudents to handle state of this component, will
   // send only the name to the courseDispatch for updates
   const [updatedStudents, setUpdatedStudents] = React.useState([]);
+  const [editCourseName, setEditCourseName] = React.useState(false);
   const courseDispatch = useCourseDispatch();
 
   React.useEffect(() => {
     // only if the list of students change do I want to
     // map over them so editing is easier in this component
     // probably a better way to do this...
+    debugger;
     if (isEqual(updatedStudents, course.students)) return;
-    console.log('updating state', { students: course.students, updatedStudents });
+
     setUpdatedStudents(course.students.map(student => ({ name: student.name, id: uuid(), isEditing: false, courseId: course.id })))
   }, [course.students]);
+
+  function handleEditCourseNameClick() {
+    setEditCourseName(true);
+  }
 
   function handleEditStudentClick(e) {
     const studentId = e.target.dataset.id;
@@ -73,12 +58,28 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
 
   }
 
+  async function handleCourseSubmit(courseName) {
+    if (!courseName.length) return;
+    try {
+      const { error } = await updateCourse(courseDispatch, course.id, { name: courseName });
+      if (error) throw new Error(error);
+      setEditCourseName(false);
+    } catch (err) {
+      console.log('Error updating course: ', JSON.stringify(err, null, 2));
+    }
+  }
+
   function renderEditCourse() {
     if (!course) return <div>Loading...</div>
     return (<>
-      <div>
-        {course.name}
-      </div>
+      {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} handleCancel={() => setEditCourseName(false)} />}
+      {!editCourseName && (
+        <div>
+          {course.name}
+          <Button onClick={handleEditCourseNameClick}>Edit</Button>
+        </div>
+      )}
+
       <div>
         <h2>Students</h2>
         <CreateStudentForm studentList={course.students} courseId={course.id} courseDispatch={courseDispatch} />
@@ -108,10 +109,6 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   return renderEditCourse();
 }
 
-function CourseStudentList(props) {
-
-}
-
 function EditStudent({ student, handleCancel, courseDispatch, updatedStudents }) {
   const [value, setValue] = React.useState(student.name);
   const handleChange = (e) => setValue(e.target.value);
@@ -127,18 +124,14 @@ function EditStudent({ student, handleCancel, courseDispatch, updatedStudents })
     const studentList = updatedStudents.map(s => s.id === studentId ? { name: value } : { name: s.name });
     // update the students in the DB
     try {
-
       const { error, students } = await updateCourseStudents(student.courseId, studentList);
-
       if (error) throw new Error(error);
       // update local state
       courseDispatch({ type: courseActions.UPDATE_COURSE, course: { id: student.courseId, students } });
     } catch (error) {
       console.log(error);
     }
-
   }
-
   return (
     <InputDiv as='div'>
       <input type='text' id={student.name} name={student.name} value={value} onChange={handleChange} ref={inputRef} />
