@@ -6,8 +6,12 @@ import { deleteCourse, formatDate, createSession } from '../utils';
 import { useSessionDispatch, useSessionState } from '../sessionContext';
 
 const CourseContainer = styled.section`
-  padding: 2.4rem 0 0 0;
-  border-bottom: 1px solid var(--color-neutral-2);
+  padding: 1.2rem;
+  border: 1px solid var(--color-neutral-2);
+  box-shadow: 0 2px 4px rgba(0,0,0,.12);
+  border-radius: 15px;
+  background: var(--color-neutral-1);
+  margin-bottom: 2.4rem;
 `;
 
 const Button = styled(BaseButton)`
@@ -17,8 +21,9 @@ const Button = styled(BaseButton)`
 
 const CourseActions = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 2.4rem;
 `;
 
 const CourseTitle = styled.p`
@@ -35,7 +40,7 @@ const StudentInfo = styled.div`
 const StyledList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 2.4rem 0;
+  margin: 0rem 0 2.4rem;
 `;
 
 const ListItem = styled.li`
@@ -77,50 +82,55 @@ const SessionHeader = ({ createdAt = new Date(), status = 'NEW' }) => {
   )
 }
 
-const SessionsList = ({ courseId, activeSession, completedSessions }) => {
+const SessionsList = ({ activeSession, completedSessions }) => {
 
   const renderSessions = () => {
     return (
-      <StyledList>
-        {!activeSession && !completedSessions.length && (
-          <ListItem>
-            <SessionInfo>
-              This course does not have any active sessions.
+      <>
+        <StyledList>
+          {!activeSession && !completedSessions.length && (
+            <ListItem>
+              <SessionInfo>
+                This course does not have any active sessions.
             </SessionInfo>
-          </ListItem>
-        )}
-        {activeSession && (
-          <>
-            <h3>Active Session:</h3>
-            <ListItem key={activeSession.id}>
-
-              <SessionHeader
-                createdAt={activeSession.createdAt}
-                status={activeSession.status}
-              />
-              <SessionInfo>
-                <Button className="primary" as={Link} to={`/session/${activeSession.id}`}>Resume Session</Button>
-                <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.remainingStudents.length}</span>
-                <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.calledStudents.length}</span>
-              </SessionInfo>
             </ListItem>
-          </>
-        )}
-        {completedSessions.length ? (<>
+          )}
+          {activeSession && (
+            <>
+              <h3>Active Session:</h3>
+              <ListItem key={activeSession.id}>
 
-          <div>Completed Sessions</div>
-          {completedSessions.map(session => (
-            <ListItem key={session.id}>
-              <SessionInfo>
-                <SessionHeader createdAt={session.createdAt} status={session.status} />
-                <span>Remaining Students: </span><span>{session.remainingStudents.length}</span>
-                <span>Called Students: </span><span>{session.calledStudents.length}</span>
-              </SessionInfo>
-            </ListItem>
-          ))}
-        </>) : null}
+                <SessionHeader
+                  createdAt={activeSession.createdAt}
+                  status={activeSession.status}
+                />
+                <SessionInfo>
+                  <Button className="primary" as={Link} to={`/session/${activeSession.id}`}>Resume Session</Button>
+                  <span>Remaining Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.remainingStudents.length}</span>
+                  <span>Called Students: </span><span style={{ marginRight: '1.2rem' }}>{activeSession.calledStudents.length}</span>
+                </SessionInfo>
+              </ListItem>
+            </>
+          )}
+        </StyledList>
+        <h3>Completed Sessions</h3>
+        <StyledList>
+          {completedSessions.length ? (<>
 
-      </StyledList>
+
+            {completedSessions.map(session => (
+              <ListItem key={session.id}>
+                <SessionInfo>
+                  <SessionHeader createdAt={session.createdAt} status={session.status} />
+                  <span>Remaining Students: </span><span>{session.remainingStudents.length}</span>
+                  <span>Called Students: </span><span>{session.calledStudents.length}</span>
+                </SessionInfo>
+              </ListItem>
+            ))}
+          </>) : null}
+        </StyledList>
+      </>
+
 
     )
   }
@@ -151,18 +161,24 @@ const CourseCard = ({ course, ...props }) => {
   return (
     <CourseContainer key={course.id}>
       <CourseActions>
-        <CourseTitle>{course.name}</CourseTitle>
-        {!activeSession && <Button
-          className="primary"
-          onClick={handleAddSession}
-        >New Session</Button>}
+        <div>
+          <CourseTitle>{course.name}</CourseTitle>
+          <StudentInfo>
+            {course.students.length} students
+      </StudentInfo>
+        </div>
+        <div>
 
-        <Button className="secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
-        {!course.sessions.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
+          {!activeSession && <Button
+            className="primary"
+            onClick={handleAddSession}
+          >New Session</Button>}
+
+          <Button className="secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
+          {!course.sessions.length && <Button onClick={handleDelete} className="danger">Delete Course</Button>}
+        </div>
       </CourseActions>
-      <StudentInfo>
-        {course.students.length} students
-    </StudentInfo>
+
 
       <div>
         <SessionsList courseId={course.id} activeSession={activeSession} completedSessions={completedSessions} />
