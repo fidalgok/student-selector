@@ -10,11 +10,14 @@
   --color-neutral-1: hsl(40, 23%, 97%);
   --color-secondary-10: hsl(15, 86%, 30%);
   --color-secondary-5: hsl(44, 92%, 63%);
+  --color-secondary-4: hsl(44, 92%, 73%);
   --color-secondary-2: hsl(48, 100%, 88%);
   --color-secondary-1: hsl(49, 100%, 96%);
   --color-white: hsl(40, 83%, 99%);
   --color-black: hsl(42, 13%, 4%);
   --color-red-8: hsl(358, 79%, 32%);
+  --color-primary-box-shadow: 0px 4px 8px hsla(44, 92%, 33%, .14);
+  --media-query-tablet: 750px;
 }
 
 
@@ -24,6 +27,13 @@
 
 html {
   font-size: 62.5%;
+}
+
+@media (max-width: 520px){
+  html{
+
+    font-size: 56.25%;
+  }
 }
 
 body {
@@ -38,6 +48,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

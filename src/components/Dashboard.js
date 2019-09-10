@@ -10,6 +10,9 @@ const DashboardHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.4rem;
+  @media (max-width: 750px){
+    padding: 0 1.2rem;
+  }
 `;
 
 const DashboardTitle = styled.h2`

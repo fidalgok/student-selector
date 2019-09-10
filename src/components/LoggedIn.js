@@ -26,6 +26,11 @@ export const Main = styled.main`
   background: var(--color-white);
   z-index: 1;
   padding: 4rem;
+
+  @media (max-width: 750px){
+    padding: 2rem 0;
+    border-radius: 0;
+  }
 `;
 
 const LoggedIn = (props) => {

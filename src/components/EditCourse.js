@@ -28,7 +28,7 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
     // only if the list of students change do I want to
     // map over them so editing is easier in this component
     // probably a better way to do this...
-    debugger;
+
     if (isEqual(updatedStudents, course.students)) return;
 
     setUpdatedStudents(course.students.map(student => ({ name: student.name, id: uuid(), isEditing: false, courseId: course.id })))

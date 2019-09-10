@@ -30,6 +30,9 @@ const Wrapper = styled.div`
   align-items: center;
 
   padding: 1.5rem 4rem;
+  @media (max-width: 750px){
+    padding: 1.5rem 1.2rem;
+  }
 `;
 
 const Header = (props) => {
