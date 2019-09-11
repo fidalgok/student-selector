@@ -56,24 +56,7 @@ export const listCourses = async (limit = 20) => {
           students{
             name
           }
-          sessions{
-            nextToken
-            items{
-              id
-              status
-              createdAt
-              calledStudents{
-                student{
-                  name
-                }
-                score
-                calledDate
-              }
-              remainingStudents{
-                name
-              }
-            }
-          }
+
         }
       }
     }
@@ -83,10 +66,7 @@ export const listCourses = async (limit = 20) => {
     // while (data.listCourses.sessions.nextToken){
     //   const nextSessions = await API.graphql(graphqlOperation())
     // }
-    const courses = data.listCourses.items.map(course => ({
-      ...course,
-      sessions: course.sessions.items.map(session => ({ ...session })),
-    }))
+    const courses = data.listCourses.items;
     return { error: null, courses }
   } catch (error) { return { error } }
 }
@@ -101,11 +81,6 @@ export async function createCourse(courseName) {
       students{
         name
       }
-      sessions{
-        items{
-          id
-        }
-      }
     }
   }
   `;
@@ -117,11 +92,8 @@ export async function createCourse(courseName) {
         students: [],
       }
     }));
-    const course = {
-      ...data.createCourse,
-      sessions: data.createCourse.sessions.items.map(session => ({ ...session }))
-    }
-    return { error: null, course }
+
+    return { error: null, course: data.createCourse }
   } catch (error) {
     return { error }
   }

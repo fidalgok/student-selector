@@ -9,6 +9,7 @@ import BaseButton from './styled/Button';
 import { InputDiv } from './styled/Input';
 import { CreateStudentForm } from './CreateStudentForm';
 import { EditCourseForm } from './CreateCourse';
+import FileUploader from './ImportStudents';
 
 
 const Button = styled(BaseButton)`
@@ -16,13 +17,21 @@ const Button = styled(BaseButton)`
   padding: .8rem 1rem;
 `;
 
-
+const StudentList = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  max-width: 520px;
+  border-bottom: 1px solid var(--color-neutral-2);
+  padding: 1.2rem 0;
+`;
 
 const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   // use updatedStudents to handle state of this component, will
   // send only the name to the courseDispatch for updates
   const [updatedStudents, setUpdatedStudents] = React.useState([]);
   const [editCourseName, setEditCourseName] = React.useState(false);
+
   const courseDispatch = useCourseDispatch();
 
   React.useEffect(() => {
@@ -70,6 +79,17 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
     }
   }
 
+  async function handleFileLoad(studentImport) {
+
+    try {
+      const { error } = await updateCourse(courseDispatch, course.id, { students: studentImport });
+      if (error) throw new Error(error);
+    } catch (error) {
+      console.log('error uploading students', error)
+    }
+
+  }
+
   function renderEditCourse() {
     if (!course) return <div>Loading...</div>
     return (<>
@@ -79,16 +99,17 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
       </nav>
       {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} handleCancel={() => setEditCourseName(false)} />}
       {!editCourseName && (
-        <div>
-          {course.name}
+        <div style={{ marginTop: '2.4rem' }}>
+          <span style={{ fontSize: '3.2rem' }}>{course.name}</span>
           <Button onClick={handleEditCourseNameClick}>Edit</Button>
         </div>
       )}
 
       <div>
-        <h2>Students</h2>
-        <CreateStudentForm studentList={course.students} courseId={course.id} courseDispatch={courseDispatch} />
 
+        <CreateStudentForm studentList={course.students} courseId={course.id} courseDispatch={courseDispatch} />
+        <FileUploader onSubmitStudents={handleFileLoad} currentStudents={course.students} />
+        <h2>Current Students</h2>
         {updatedStudents.map((student) => {
           return student.isEditing ? (
             <EditStudent
@@ -99,13 +120,16 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
               handleCancel={handleEditStudentClick}
             />
           ) : (
-              <div key={student.id}>
-                <span style={{ marginRight: '2.4rem' }}>
+              <StudentList key={student.id}>
+                <span style={{ flexBasis: '60%' }}>
                   {student.name}
                 </span>
-                <Button className="secondary" data-id={student.id} onClick={handleEditStudentClick}>Edit</Button>
-                <Button className="danger" data-id={student.id} onClick={handleDeleteStudentClick}>Delete</Button>
-              </div>
+                <div>
+
+                  <Button className="secondary" data-id={student.id} onClick={handleEditStudentClick}>Edit</Button>
+                  <Button className="danger" data-id={student.id} onClick={handleDeleteStudentClick}>Delete</Button>
+                </div>
+              </StudentList>
             )
         })}
       </div>

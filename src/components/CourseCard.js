@@ -293,7 +293,7 @@ const CourseCard = ({ course, ...props }) => {
           >New Session</Button>}
 
           <Button className="header-secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
-          {!course.sessions.length && <Button onClick={handleDelete} className="header-danger">Delete Course</Button>}
+          {!courseSessions.length && <Button onClick={handleDelete} className="header-danger">Delete Course</Button>}
         </CourseButtons>
       </CourseActions>
 
