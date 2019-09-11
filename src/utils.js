@@ -312,7 +312,7 @@ export const updateSession = async (sessionDispatch = () => { }, updatedSession 
       updateSession(input: $input){
         id
         status
-        course{id}
+        course{id name}
         calledStudents{
           student{name}
           score

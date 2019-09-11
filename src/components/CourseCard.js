@@ -31,11 +31,18 @@ const CourseContainer = styled.section`
 const Button = styled(BaseButton)`
   margin-right: 1.2rem;
   text-decoration:none;
-  &.header-secondary, &.header-danger{
+  &.header-secondary{
     color:var(--color-white);
-    &:hover {
+    &:hover{
       color: var(--color-black);
+      background: var(--color-neutral-2);
     }
+  &.header-danger{
+    color: var(--color-white);
+    &:hover{
+      background: var(--color-neutral-2);
+    }
+  }
     @media (max-width: 520px){
       margin:0;
     }
@@ -223,7 +230,7 @@ const SessionsList = ({ activeSession, completedSessions, handleAddSession }) =>
               <ListItem key={session.id}>
                 <SessionHeader createdAt={session.createdAt} status={session.status} />
                 <SessionInfo>
-                  <Button as={Link} to={`/session/${session.id}`} className="session-results">View Results</Button>
+                  <Button as={Link} to={{ pathname: `/session/${session.id}`, state: { viewOnly: true } }} className="session-results">View Results</Button>
                 </SessionInfo>
               </ListItem>
             ))}

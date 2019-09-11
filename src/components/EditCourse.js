@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 import uuid from 'uuid/v4';
 import { isEqual } from 'lodash/lang'
 import { updateCourse, updateCourseStudents, deleteCourseStudent } from '../utils';
@@ -72,6 +73,10 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   function renderEditCourse() {
     if (!course) return <div>Loading...</div>
     return (<>
+      <nav>
+        <Link to="/" style={{ margin: '0 1.2rem 0 0', color: 'inherit' }}>Dashboard</Link> &rarr;
+            <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> New Course</p>
+      </nav>
       {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} handleCancel={() => setEditCourseName(false)} />}
       {!editCourseName && (
         <div>

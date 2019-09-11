@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Link as BaseLink } from 'react-router-dom';
 import BaseButton from '../components/styled/Button';
 import { getRandomArrayIdx, updateSession, createSession } from '../utils';
 import { useCourseState } from '../courseContext';
 import { useSessionDispatch } from '../sessionContext';
-
-
 
 const Section = styled.section`
  padding: 1.6rem 0;
@@ -23,6 +22,7 @@ const Section = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-flow: row wrap;
  }
 
  li:not(:last-of-type){
@@ -57,6 +57,11 @@ const Button = styled(BaseButton)`
   &[disabled]{
     cursor: not-allowed;
   }
+
+`;
+
+const Link = styled(BaseLink)`
+  color: inherit;
 `;
 const CalledStudent = styled.p`
   font-size: 3.2rem;
@@ -66,6 +71,7 @@ const CalledStudent = styled.p`
 const StudentRatingContainer = styled.div`
   margin-bottom: 2.4rem;
   display: flex;
+  flex-grow: 1;
   justify-content: space-between;
 `;
 
@@ -79,8 +85,6 @@ const CalledStudentScore = styled.div`
 
   border-radius: 15px;
   padding: .4rem .8rem;
-
-
 
 &.score-none {
   background: #E4E7EB;
@@ -99,6 +103,12 @@ const CalledStudentScore = styled.div`
   background: #8EEDC7;
   color: hsl(170, 97%, 10%);
 }
+`;
+
+const EditButton = styled(BaseButton)`
+  padding: 0;
+  display: block;
+  margin: 1.2rem 0;
 `;
 
 const getScoreInfo = (score) => {
@@ -134,6 +144,7 @@ const getScoreInfo = (score) => {
 const Session = ({ session, ...props }) => {
 
   const [loadingMessage, setLoadingMessage] = React.useState(null);
+  const [isEditingScore, setIsEditingScore] = React.useState(null);
   const sessionDispatch = useSessionDispatch();
   const { courses } = useCourseState();
   if (!session) return <div>Whoops, no session found</div>
@@ -197,49 +208,51 @@ const Session = ({ session, ...props }) => {
   }
   return (
     <>
-      <Section>
-        <SectionContainer>
-          <p style={{ textAlign: 'center', margin: '0' }}> {session.course.name}</p>
-        </SectionContainer>
-      </Section>
-      <Section>
-        <SectionContainer>
-          <CalledStudent>{calledStudent.student.name}</CalledStudent>
-          {!!session.calledStudents.length && (
-            <>
-              <StudentRatingContainer >
-                <Button className={`secondary ${calledStudent.score === 'check_minus' ? 'score-checkminus' : ''}`} data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
-                <Button className={`secondary ${calledStudent.score === 'check' ? 'score-check' : ''}`} data-score="check" onClick={handleStudentScore}> check </Button>
-                <Button className={`secondary ${calledStudent.score === 'check_plus' ? 'score-checkplus' : ''}`} data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
-              </StudentRatingContainer>
-            </>
-          )
-          }
-          {session.status === 'NEW' && <Button className="primary" onClick={handleNextStudent} disabled={session.status === 'COMPLETE' || loadingMessage}>
-            Begin Session
+
+      <nav>
+        <Link to="/" style={{ margin: '0 1.2rem 0 0' }}>Dashboard</Link> &rarr;
+            <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> {session.course.name}</p>
+      </nav>
+
+      {!props.viewOnly && (
+        <>
+          <Section>
+            <SectionContainer>
+              <CalledStudent>{calledStudent.student.name}</CalledStudent>
+              {!!session.calledStudents.length && (
+
+                <ScoreStudent student={calledStudent} handleStudentScore={handleStudentScore} />
+
+              )
+              }
+              {session.status === 'NEW' && <Button className="primary" onClick={handleNextStudent} disabled={session.status === 'COMPLETE' || loadingMessage}>
+                Begin Session
         </Button>}
-          {session.status === 'IN_PROGRESS' && !!session.remainingStudents.length && (
-            <Button className="primary" onClick={handleNextStudent} disabled={loadingMessage}>
-              {loadingMessage || 'Next Student'}
-            </Button>
-          )}
-          {session.remainingStudents.length === 0 && session.status !== 'COMPLETE' && (
-            <Button className="primary" onClick={handleCompleteSession} disabled={loadingMessage}>
-              Complete Session
+              {session.status === 'IN_PROGRESS' && !!session.remainingStudents.length && (
+                <Button className="primary" onClick={handleNextStudent} disabled={loadingMessage}>
+                  {loadingMessage || 'Next Student'}
+                </Button>
+              )}
+              {session.remainingStudents.length === 0 && session.status !== 'COMPLETE' && (
+                <Button className="primary" onClick={handleCompleteSession} disabled={loadingMessage}>
+                  Complete Session
       </Button>
-          )}
-          {session.status === 'COMPLETE' && (
-            <Button className="primary" onClick={handleAddSession} disabled={loadingMessage}>
-              Start New Session?
+              )}
+              {session.status === 'COMPLETE' && (
+                <Button className="primary" onClick={handleAddSession} disabled={loadingMessage}>
+                  Start New Session?
         </Button>
-          )}
-        </SectionContainer>
-      </Section>
-      <Section>
-        <SectionContainer>
-          <p style={{ textAlign: 'center' }}>Students Left: {session.remainingStudents.length}</p>
-        </SectionContainer>
-      </Section>
+              )}
+            </SectionContainer>
+          </Section>
+          <Section>
+            <SectionContainer>
+              <p style={{ textAlign: 'center' }}>Students Left: {session.remainingStudents.length}</p>
+            </SectionContainer>
+          </Section>
+        </>
+      )}
+
       {session.calledStudents.length > 0 && <Section>
         <SectionContainer>
           <SectionHeading>
@@ -250,10 +263,20 @@ const Session = ({ session, ...props }) => {
               const { className, value } = getScoreInfo(score);
               return (
                 <li key={calledDate}>
-                  <span>{student.name}</span>
-                  <CalledStudentScore className={className}>
-                    {value}
-                  </CalledStudentScore>
+                  <div>
+                    <span>{student.name}</span>
+                    <EditButton onClick={() => setIsEditingScore(isEditingScore ? null : calledDate)}>
+                      {isEditingScore ? 'done' : 'edit score'}
+                    </EditButton>
+                  </div>
+                  {calledDate === isEditingScore ? (
+                    <ScoreStudent student={{ score }} handleStudentScore={handleStudentScore} />
+                  ) : (
+
+                      <CalledStudentScore className={className}>
+                        {value}
+                      </CalledStudentScore>
+                    )}
                 </li>
               )
             })}
@@ -263,5 +286,16 @@ const Session = ({ session, ...props }) => {
     </>
   );
 }
+
+function ScoreStudent({ student: calledStudent, handleStudentScore }) {
+  return (
+    <StudentRatingContainer>
+      <Button className={`secondary ${calledStudent.score === 'check_minus' ? 'score-checkminus' : ''}`} data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
+      <Button className={`secondary ${calledStudent.score === 'check' ? 'score-check' : ''}`} data-score="check" onClick={handleStudentScore}> check </Button>
+      <Button className={`secondary ${calledStudent.score === 'check_plus' ? 'score-checkplus' : ''}`} data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
+    </StudentRatingContainer>
+  )
+}
+
 
 export default Session;

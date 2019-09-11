@@ -23,7 +23,7 @@ const AppRouter = (props) => {
         <Route exact path="/" render={(routerProps) => <Dashboard {...routerProps} {...props} />} />
         <Route exact path="/course/:id/edit" render={(routerProps) => <EditCourse {...routerProps} course={getCourseById(routerProps.match.params.id, props.courses)} />} />
         <Route exact path="/course/new" render={(routerProps) => <CreateCourse {...routerProps} />} />
-        <Route exact path="/session/:id" render={(routerProps) => <Session {...routerProps} session={getActiveSession(routerProps.match.params.id, props.sessions)} />} />
+        <Route exact path="/session/:id" render={(routerProps) => <Session {...routerProps} session={getActiveSession(routerProps.match.params.id, props.sessions)} viewOnly={routerProps.location.state && routerProps.location.state.viewOnly} />} />
       </Switch>
     </Router>
   )

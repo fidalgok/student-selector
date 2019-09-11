@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { createCourse } from '../utils';
 import { useCourseDispatch, courseActions } from '../courseContext';
 import Button from './styled/Button';
@@ -20,6 +21,10 @@ const CreateCourse = ({ history }) => {
   }
   return (
     <>
+      <nav>
+        <Link to="/" style={{ margin: '0 1.2rem 0 0', color: 'inherit' }}>Dashboard</Link> &rarr;
+            <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> New Course</p>
+      </nav>
       <EditCourseForm handleSubmit={handleSubmit} />
     </>
   )
@@ -31,9 +36,9 @@ export function EditCourseForm({ handleSubmit, cancelButton, course = { name: nu
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(courseName) }}>
       <h2>Create Course</h2>
       <div>
-        <label htmlFor="courseName">Course Name</label>
+        <label htmlFor="courseName" style={{ display: 'block', color: 'var(--color-neutral-8)', paddingLeft: '10px', marginBottom: '4px', fontSize: '1.4rem' }}>Course Name</label>
         <InputDiv>
-          <input type="text" id="courseName" name="courseName" onChange={(e) => { setCourseName(e.target.value) }} value={courseName} />
+          <input type="text" id="courseName" name="courseName" placeholder="Enter a course name" onChange={(e) => { setCourseName(e.target.value) }} value={courseName} />
           <Button type="submit">Save</Button>
           {cancelButton && <Button className="secondary">Cancel</Button>}
         </InputDiv>

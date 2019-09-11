@@ -26,11 +26,10 @@ export default styled.button`
   }
 
   &.secondary {
-
     color: var(--color-neutral-8);
     &:hover{
 
-      background: var(--color-neutral-2);
+      box-shadow: 0px 4px 8px hsla(44, 12%, 33%, .14);
     }
   }
 
@@ -39,7 +38,8 @@ export default styled.button`
 
     &:hover {
       color: var(--color-red-8);
-      background: var(--color-neutral-1);
+      box-shadow: 0px 4px 8px hsla(355, 92%, 33%, .14);
+
     }
   }
 `;

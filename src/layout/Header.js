@@ -6,7 +6,6 @@ import Button from '../components/styled/Button';
 
 const HeaderContainer = styled(Container)`
   z-index: 999;
-
   color: var(--color-white);
 `;
 
