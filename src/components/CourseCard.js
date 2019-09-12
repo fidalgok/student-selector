@@ -122,8 +122,8 @@ const StyledList = styled.ul`
   max-height: 24rem;
   overflow-x: auto;
   position: relative;
-  border: 1px solid var(--color-neutral-2);
-  border-top: 8px solid var(--color-secondary-5);
+  border: 1px solid var(--color-neutral-4);
+
   border-radius: 5px;
   @media (max-width: 750px){
     margin: 0 1rem;
@@ -134,7 +134,8 @@ const StyledList = styled.ul`
     top: 0;
     left:0;
     background: var(--color-neutral-1);
-    box-shadow: 0px 2px 4px hsla(43, 13%, 90%, .5);
+    border-bottom: 1px solid var(--color-neutral-4);
+
     padding: .8rem;
   }
 `;

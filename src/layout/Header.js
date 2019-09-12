@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { Auth } from 'aws-amplify';
 import Container from './Container';
 import Button from '../components/styled/Button';
+import { AppLogo } from '../components/styled/Icons';
 
 const HeaderContainer = styled(Container)`
   z-index: 999;
@@ -39,7 +40,11 @@ const Header = (props) => {
   return (<>
     <HeaderContainer>
       <Wrapper>
-        <AppTitle href='/'>Student Selector</AppTitle>
+        <div style={{ display: 'flex' }}>
+
+          <AppLogo width="4.2rem" style={{ marginRight: '1rem' }} />
+          <AppTitle href='/'>Student Selector</AppTitle>
+        </div>
         <Logout onClick={async () => {
           try {
             await Auth.signOut();
