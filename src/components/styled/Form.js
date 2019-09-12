@@ -68,4 +68,12 @@ export const Button = styled(ButtonBase)`
     border: 2px solid var(--color-secondary-1);
     align-self:center;
   }
+
+  &.secondary {
+    background: none;
+    &:hover{
+      box-shadow: none;
+      text-decoration: underline;
+    }
+  }
 `;

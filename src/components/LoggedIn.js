@@ -28,7 +28,7 @@ export const Main = styled.main`
   padding: 4rem;
 
   @media (max-width: 750px){
-    padding: 2rem 0;
+    padding: 2rem 1rem;
     border-radius: 0;
   }
 `;

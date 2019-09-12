@@ -1,13 +1,14 @@
 import React from 'react';
 import { FormContainer, Form, Title, Input, Button } from './styled/Form';
+import { IconError } from './styled/Icons';
+import AlertError from './styled/AlertError';
 
 const ForgotPasswordForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.forgotPassword()
-      .then(() => props.setFormType('forgotPasswordSubmit'))
-      .catch(error => console.log(error));
+    props.forgotPassword();
+
   }
   return (
     <FormContainer>
@@ -21,6 +22,12 @@ const ForgotPasswordForm = (props) => {
         <Button type="submit" className="primary">
           Submit
         </Button>
+        {!!props.formError && (
+          <>
+            <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
+            <Button type="button" className="secondary" onClick={() => props.setFormType("signUp")}>Sign up?</Button>
+          </>
+        )}
       </Form>
     </FormContainer>
   )
@@ -59,6 +66,9 @@ const UpdatePasswordForm = (props) => {
         <Button type="submit" className="primary">
           Submit
         </Button>
+        {!!props.formError && (
+          <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
+        )}
       </Form>
     </FormContainer>
   )

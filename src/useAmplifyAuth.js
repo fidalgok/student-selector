@@ -73,7 +73,7 @@ const useAmplifyAuth = () => {
     const HubListener = () => {
       Hub.listen('auth', (data) => {
         const { payload } = data;
-        console.log({ payload, message: 'from hub listener' });
+
         switch (payload.event) {
           case 'signIn':
             setTriggerFetch(true);

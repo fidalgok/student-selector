@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { FormContainer, Form, Input, Button, Title } from './styled/Form'
+import { IconError } from './styled/Icons';
+import AlertError from './styled/AlertError';
 
 const Container = styled.div`
 
@@ -9,7 +11,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items:center;
   background-color: #f9cd49;
-  background-image: linear-gradient(151deg, #f9cd49 0%, #f55c0a 74%);
+  background-image: linear-gradient(to bottom, hsl(47, 10%, 28%), hsl(40, 10%, 18%));
   padding: 4.8rem 2.4rem;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -63,6 +65,9 @@ const SignInForm = (props) => {
         <Button onClick={props.signIn} className="primary">
           Sign In
         </Button>
+        {!!props.formError && (
+          <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
+        )}
         <div style={{ textAlign: 'center', marginTop: '1.6rem' }}>
           <p>Forgot your password? <ResetButton onClick={() => props.setFormType('forgotPassword')}>Reset your password here.</ResetButton></p>
         </div>

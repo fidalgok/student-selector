@@ -5,7 +5,7 @@ import { useCourseDispatch, courseActions } from '../courseContext';
 import Button from './styled/Button';
 import { InputDiv } from './styled/Input';
 
-const CreateCourse = ({ history }) => {
+const CreateCourse = ({ history, ...props }) => {
   const courseDispatch = useCourseDispatch();
 
   const handleSubmit = async (courseName) => {
@@ -25,16 +25,17 @@ const CreateCourse = ({ history }) => {
         <Link to="/" style={{ margin: '0 1.2rem 0 0', color: 'inherit' }}>Dashboard</Link> &rarr;
             <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> New Course</p>
       </nav>
-      <EditCourseForm handleSubmit={handleSubmit} />
+      <h2>Create Course</h2>
+      <EditCourseForm handleSubmit={handleSubmit} {...props} />
     </>
   )
 }
 
-export function EditCourseForm({ handleSubmit, cancelButton, course = { name: null } }) {
+export function EditCourseForm({ handleSubmit, cancelButton, course = { name: null }, ...props }) {
   const [courseName, setCourseName] = React.useState(course.name || '');
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(courseName) }}>
-      <h2>Create Course</h2>
+    <form {...props} onSubmit={(e) => { e.preventDefault(); handleSubmit(courseName) }}>
+
       <div>
         <label htmlFor="courseName" style={{ display: 'block', color: 'var(--color-neutral-8)', paddingLeft: '10px', marginBottom: '4px', fontSize: '1.4rem' }}>Course Name</label>
         <InputDiv>

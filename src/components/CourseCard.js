@@ -12,12 +12,12 @@ const CourseContainer = styled.section`
   box-shadow: 0 4px 8px rgba(0,0,0,.08);
   border-radius: 15px;
   background: var(--color-neutral-1);
-  background-image: linear-gradient(to bottom, var(--color-neutral-10) 11rem, transparent 11rem);
+
   margin-bottom: 2.4rem;
   @media (max-width: 750px){
     padding-bottom: 2.4rem;
     border-radius: 0;
-    margin: 0 1rem 2.4rem;
+
   }
   & > * {
     padding: 2.4rem;
@@ -32,13 +32,17 @@ const Button = styled(BaseButton)`
   margin-right: 1.2rem;
   text-decoration:none;
   &.header-secondary{
-    color:var(--color-white);
+    color:var(--color-black);
+    text-decoration: underline;
+    padding-left: 0;
+    padding-right: 0;
+    font-weight: normal;
     &:hover{
-      color: var(--color-black);
+
       background: var(--color-neutral-2);
     }
   &.header-danger{
-    color: var(--color-white);
+    color: var(--color-black);
     &:hover{
       background: var(--color-neutral-2);
     }
@@ -50,6 +54,7 @@ const Button = styled(BaseButton)`
   &.session-results{
     padding: 0;
     text-decoration:underline;
+    font-weight: normal;
   }
 `;
 
@@ -58,8 +63,11 @@ const CourseActions = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.2rem;
-  color: var(--color-white);
-
+  border-bottom: 2px solid var(--color-neutral-2);
+  color: var(--color-black);
+  background: var(--color-neutral-2);
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
   @media (max-width: 750px){
     padding: 1.2rem;
     margin-bottom: 4.2rem;
@@ -91,7 +99,7 @@ const CourseTitle = styled.p`
 `;
 
 const StudentInfo = styled.div`
-  color: var(--color-neutral-1);
+  color: var(--color-neutral-8);
   font-size: 1.2rem;
   @media (max-width: 520px){
     margin-left: 1.2rem;

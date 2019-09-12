@@ -6,7 +6,9 @@ import ForgotPasswordForm, { UpdatePasswordForm } from './ForgotPasswordForm';
 
 
 const LoggedOut = (props) => {
-  const [formType, setFormType] = React.useState('signIn');
+
+  const [formType, setFormType] = React.useState(window.localStorage.getItem('formType') || 'signIn');
+  const [formError, setFormError] = React.useState(null);
   const [formState, updateFormState] = React.useReducer((state, action) => {
     switch (action.type) {
       case 'updateFormState':
@@ -25,14 +27,20 @@ const LoggedOut = (props) => {
 
     });
 
+  React.useEffect(() => {
+    window.localStorage.setItem('formType', formType);
+    setFormError(null);
+  }, [formType])
+
   function renderForm() {
     switch (formType) {
       case 'signUp':
         return (
           <SignUpForm
-            signUp={() => signUp(formState, setFormType)}
+            signUp={() => signUp(formState, setFormType, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
-            updateFormType={() => setFormType('signIn')}
+            updateFormType={setFormType}
+            formError={formError}
           />
         );
       case 'confirmSignUp':
@@ -40,27 +48,30 @@ const LoggedOut = (props) => {
           <SignUpForm
             formType={formType}
             username={formState.username}
-            confirmSignUp={() => confirmSignUp(formState, setFormType)}
+            confirmSignUp={() => confirmSignUp(formState, setFormType, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
-            updateFormType={() => setFormType('signIn')}
+            updateFormType={setFormType}
+            formError={formError}
           />
         );
       case 'signIn':
         return (
           <SignInForm
             setFormType={setFormType}
-            signIn={() => signIn(formState)}
+            signIn={() => signIn(formState, setFormError)}
             updateFormState={e => updateFormState({
               type: 'updateFormState', e
             })}
             updateFormType={() => setFormType('signUp')}
+            formError={formError}
           />
         )
       case 'forgotPassword':
         return (
           <ForgotPasswordForm
+            formError={formError}
             setFormType={setFormType}
-            forgotPassword={() => forgotPassword(formState.username)}
+            forgotPassword={() => forgotPassword(formState.username, setFormType, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
           />
         )
@@ -68,7 +79,7 @@ const LoggedOut = (props) => {
         return (
           <UpdatePasswordForm
             username={formState.username}
-            submitNewPassword={() => forgotPasswordSubmit(formState.username, formState.passwordResetCode, formState.password)}
+            submitNewPassword={() => forgotPasswordSubmit(formState.username, formState.passwordResetCode, formState.password, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
             setFormType={setFormType}
           />
@@ -82,52 +93,66 @@ const LoggedOut = (props) => {
   </>);
 }
 
-async function signUp({ username, password, email }, setFormType) {
+async function signUp({ username, password, email }, setFormType, setFormError) {
   try {
     await Auth.signUp({
       username, password, attributes: { email }
     })
-    console.log('sign up success!')
+
     setFormType('confirmSignUp')
   } catch (err) {
-    console.log('error signing up..', err)
+    console.log(err)
+    if (err.code === 'InvalidParameterException') {
+      setFormError(err.message)
+    }
+    if (err === 'Username cannot be empty') {
+      setFormError(err)
+    }
+
+    if (err.code === 'UsernameExistsException') {
+      setFormError('A user with that username was found. Click Sign in and try resetting your password.')
+    }
   }
 }
 
-async function confirmSignUp({ username, confirmationCode, password }) {
+async function confirmSignUp({ username, confirmationCode, password }, _, setFormError) {
   try {
     await Auth.confirmSignUp(username, confirmationCode)
-    console.log('confirm sign up success!')
+
     await signIn({ username, password });
   } catch (err) {
-    console.log('error signing up..', err)
+    setFormError('Error Confirming Signup.')
   }
 }
 
-async function signIn({ username, password }) {
+async function signIn({ username, password }, setFormError) {
   try {
     await Auth.signIn(username, password);
-    console.log('sign in success!')
+    setFormError(null);
   } catch (err) {
-    console.log('error signing up..', err)
+    if (err.code === 'UserNotFoundException') {
+
+      setFormError('Username or password is incorrect, try again.')
+    } else {
+      setFormError('Hmm, something went wrong. Try again.')
+    }
   }
 }
 
-async function forgotPassword(username) {
+async function forgotPassword(username, setFormType, setFormError) {
   try {
     const data = await Auth.forgotPassword(username);
-    console.log(data);
+    setFormType('forgotPasswordSubmit')
   } catch (error) {
-    console.log(error);
+    setFormError('No username found');
   }
 }
 
 async function forgotPasswordSubmit(username, code, newPassword) {
-  debugger;
+
   try {
     const data = await Auth.forgotPasswordSubmit(username, code, newPassword)
-    console.log(data);
-    //await signIn({ username, password });
+
   } catch (error) { console.log(error) }
 
 }

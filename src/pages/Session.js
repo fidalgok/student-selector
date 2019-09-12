@@ -266,7 +266,7 @@ const Session = ({ session, ...props }) => {
                   <div>
                     <span>{student.name}</span>
                     <EditButton onClick={() => setIsEditingScore(isEditingScore ? null : calledDate)}>
-                      {isEditingScore ? 'done' : 'edit score'}
+                      {calledDate === isEditingScore ? 'done' : 'edit score'}
                     </EditButton>
                   </div>
                   {calledDate === isEditingScore ? (

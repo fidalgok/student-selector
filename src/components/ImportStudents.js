@@ -1,5 +1,13 @@
 import React from 'react';
 import papa from 'papaparse';
+import styled from '@emotion/styled'
+import VisuallyHidden from '@reach/visually-hidden';
+import ButtonBase from './styled/Button';
+
+const Button = styled(ButtonBase)`
+
+
+`;
 
 const ImportStudents = ({
   onSubmitStudents = () => { },
@@ -22,7 +30,6 @@ const ImportStudents = ({
     let reader = new FileReader();
     if (e.target.files.length > 0) {
       let uploadedFile = e.target.files[0];
-      const filename = uploadedFile.name;
 
       reader.onload = event => {
         const csvData = papa.parse(event.target.result, {
@@ -62,16 +69,20 @@ const ImportStudents = ({
         <li style={{ margin: '0 1.6rem' }} > studentname</li>
         <li style={{ margin: '0 1.6rem' }} > student_name</li>
       </ul>
-      <label htmlFor="students-import">Import Students</label>
+      <Button className="primary" as="label" htmlFor="students-import">Import Students</Button>
+
       {error ? <p>{error}</p> : null}
-      <input
-        type="file"
-        accept=".csv, text/csv"
-        id="students-import"
-        onChange={handleFileChange}
-        onError={handleFileChange}
-        ref={inputRef}
-      />
+      <VisuallyHidden>
+
+        <input
+          type="file"
+          accept=".csv, text/csv"
+          id="students-import"
+          onChange={handleFileChange}
+          onError={handleFileChange}
+          ref={inputRef}
+        />
+      </VisuallyHidden>
       {!!studentImports.length && (
         <div>
           <p>attempting to upload {studentImports.length} students. <button onClick={() => setShowPreview(!showPreview)}>preview import</button><button onClick={handleUpload}>add to course</button></p>

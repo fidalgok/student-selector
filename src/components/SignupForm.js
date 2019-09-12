@@ -2,7 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Auth } from 'aws-amplify';
 import { Input, Form, FormContainer, Title, Button } from './styled/Form';
-
+import AlertErrorBase from './styled/AlertError';
+import AlertInfo from './styled/AlertInfo';
+import { IconError, IconInformation } from './styled/Icons';
 const Container = styled.div`
 
   display: flex;
@@ -10,8 +12,15 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: #f9cd49;
-  background-image: linear-gradient(151deg, #f9cd49 0%, #f55c0a 74%);
+  background-image: linear-gradient(to bottom, hsl(47, 10%, 28%), hsl(40, 10%, 18%));
   padding: 4.8rem 2.4rem;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+`;
+
+const AlertError = styled(AlertErrorBase)`
+  margin-top: 1.6rem;
+  display: flex;
 `;
 
 
@@ -23,39 +32,53 @@ export const SignIn = (props) => {
       <p style={{ color: 'var(--color-white)', margin: '0', fontSize: '1.8rem', textAlign: 'center' }}>Glad you're back! <br />Please login with your personal info.</p>
       <Button
         className='invert-color'
-        onClick={props.updateFormType}
+        onClick={() => props.updateFormType('signIn')}
       >Sign In</Button>
     </Container>
   )
 }
 
 function ConfirmSignUp(props) {
+  const [resendCodeMessage, setResendCodeMessage] = React.useState('');
   return (
     <Form
       onSubmit={(e) => { e.preventDefault(); props.confirmSignUp() }}
-      style={{ gridColumn: 'span 2' }}
+      style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}
     >
       <Title className="color-dark">You've got mail!</Title>
-      <p>Check your email for a confirmation code.</p>
-      <p>Didn't receive a code? <span onClick={
-        async () => {
-          try {
-            await Auth.resendSignUp(props.username)
-          } catch (err) {
-            console.error(err);
+      <p style={{ marginTop: '0' }}>Check your email for a confirmation code.</p>
+      <p style={{ marginTop: '0' }}>Didn't receive a code? <span
+        style={{ cursor: 'pointer', textDecoration: 'underline' }}
+        onClick={
+          async () => {
+            try {
+              await Auth.resendSignUp(props.username);
+              setResendCodeMessage('Code sent, check your email again.')
+            } catch (err) {
+              console.error(err);
+            }
           }
-        }
 
-      }>Send me a new code</span></p>
+        }>Send me a new code</span></p>
+      {!!resendCodeMessage.length && (
+        <AlertInfo><IconInformation style={{ display: 'inline-block', marginRight: '1rem' }} />{resendCodeMessage}</AlertInfo>
+      )}
       <Input
         name='confirmationCode'
         placeholder='Confirmation Code'
         onChange={e => { e.persist(); props.updateFormState(e) }}
-
+        style={{ marginBottom: '1.6rem' }}
       />
       <Button>
         Confirm Sign Up
       </Button>
+      <div>
+        <Button className="secondary" onClick={() => props.updateFormType('signUp')}>Sign Up</Button>
+        <Button className="secondary" onClick={() => props.updateFormType('signIn')}>Sign In</Button>
+      </div>
+      {!!props.formError && (
+        <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
+      )}
     </Form>
   )
 }
@@ -70,7 +93,7 @@ const SignUpForm = (props) => {
     <FormContainer>
       {props.formType === "confirmSignUp" ? <ConfirmSignUp {...props} /> : (
 
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} style={{ borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}>
           <Title className="color-dark">Sign Up</Title>
           {/* inputs, forgot password, signin button */}
           <Input
@@ -90,6 +113,10 @@ const SignUpForm = (props) => {
             placeholder='email'
           />
           <Button type="submit">Sign Up</Button>
+
+          {!!props.formError && (
+            <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
+          )}
         </Form>
       )}
 
