@@ -172,13 +172,13 @@ const Session = ({ session, ...props }) => {
     }
   }
 
-  const handleStudentScore = async (e) => {
+  const handleStudentScore = async (score, student) => {
     // update the students score in the DB
     setLoadingMessage('Scoring Student...')
-    const score = e.target.dataset.score;
+
     // update the current students info and send along the session info
 
-    let updatedCalledStudents = session.calledStudents.map(seshScore => seshScore.calledDate === calledStudent.calledDate ? { ...seshScore, score } : seshScore);
+    let updatedCalledStudents = session.calledStudents.map(seshScore => seshScore.calledDate === student.calledDate ? { ...seshScore, score } : seshScore);
 
     try {
       const { error } = await updateSession(sessionDispatch, { id: session.id, calledStudents: updatedCalledStudents }, session.status);
@@ -270,7 +270,7 @@ const Session = ({ session, ...props }) => {
                     </EditButton>
                   </div>
                   {calledDate === isEditingScore ? (
-                    <ScoreStudent student={{ score }} handleStudentScore={handleStudentScore} />
+                    <ScoreStudent student={{ student, score, calledDate }} handleStudentScore={handleStudentScore} />
                   ) : (
 
                       <CalledStudentScore className={className}>
@@ -287,12 +287,12 @@ const Session = ({ session, ...props }) => {
   );
 }
 
-function ScoreStudent({ student: calledStudent, handleStudentScore }) {
+function ScoreStudent({ student, handleStudentScore }) {
   return (
     <StudentRatingContainer>
-      <Button className={`secondary ${calledStudent.score === 'check_minus' ? 'score-checkminus' : ''}`} data-score="check_minus" onClick={handleStudentScore}> check minus</Button>
-      <Button className={`secondary ${calledStudent.score === 'check' ? 'score-check' : ''}`} data-score="check" onClick={handleStudentScore}> check </Button>
-      <Button className={`secondary ${calledStudent.score === 'check_plus' ? 'score-checkplus' : ''}`} data-score="check_plus" onClick={handleStudentScore}> check plus</Button>
+      <Button className={`secondary ${student.score === 'check_minus' ? 'score-checkminus' : ''}`} onClick={() => handleStudentScore("check_minus", student)}> check minus</Button>
+      <Button className={`secondary ${student.score === 'check' ? 'score-check' : ''}`} onClick={() => handleStudentScore('check', student)}> check </Button>
+      <Button className={`secondary ${student.score === 'check_plus' ? 'score-checkplus' : ''}`} onClick={() => handleStudentScore('check_plus', student)}> check plus</Button>
     </StudentRatingContainer>
   )
 }

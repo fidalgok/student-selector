@@ -27,7 +27,9 @@ const CourseContainer = styled.section`
     }
   }
 `;
-
+const StyledLink = styled(Link)`
+  color: inherit;
+`;
 const Button = styled(BaseButton)`
   margin-right: 1.2rem;
   text-decoration:none;
@@ -123,22 +125,31 @@ const StyledList = styled.ul`
   overflow-x: auto;
   position: relative;
   border: 1px solid var(--color-neutral-4);
-
   border-radius: 5px;
+
   @media (max-width: 750px){
     margin: 0 1rem;
   }
-  h3 {
-    margin:0 0 1.2rem;
+
+`;
+const SessionListHeading = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
     position: sticky;
     top: 0;
     left:0;
     background: var(--color-neutral-1);
     border-bottom: 1px solid var(--color-neutral-4);
+    padding: 1.2rem .8rem;
 
-    padding: .8rem;
-  }
+    h3 {
+      margin: 0;
+    }
 `;
+
+
 
 const ListItem = styled.li`
 
@@ -146,7 +157,7 @@ const ListItem = styled.li`
   display: flex;
   flex-direction: column;
 
-  &:nth-child(odd){
+  &:nth-of-type(even){
     background: var(--color-neutral-2);
   }
 `;
@@ -193,14 +204,16 @@ const SessionHeader = ({ createdAt = new Date(), completedAt = new Date(), statu
   )
 }
 
-const SessionsList = ({ activeSession, completedSessions, handleAddSession }) => {
+const SessionsList = ({ activeSession, completedSessions, handleAddSession, course }) => {
 
   const renderSessions = () => {
     return (
       <>
         {!activeSession && (
           <StyledList>
-            <h3>Active Session</h3>
+            <SessionListHeading>
+              <h3>Active Session</h3>
+            </SessionListHeading>
             <ListItem>
               <SessionInfo>
                 This course does not have any active sessions.
@@ -216,7 +229,10 @@ const SessionsList = ({ activeSession, completedSessions, handleAddSession }) =>
         )}
         {activeSession && (
           <StyledList>
-            <h3>Active Session:</h3>
+            <SessionListHeading>
+              <h3>Active Session:</h3>
+
+            </SessionListHeading>
             <ListItem key={activeSession.id}>
               <SessionHeader
                 createdAt={activeSession.createdAt}
@@ -234,7 +250,10 @@ const SessionsList = ({ activeSession, completedSessions, handleAddSession }) =>
 
         {completedSessions.length ? (<>
           <StyledList>
-            <h3>Completed Sessions</h3>
+            <SessionListHeading>
+              <h3>Completed Sessions</h3>
+              <StyledLink to={{ pathname: `/course/${course.id}/report`, state: { course } }}>Run Report</StyledLink>
+            </SessionListHeading>
 
 
             {completedSessions.slice().sort((a, b) => {
@@ -256,7 +275,10 @@ const SessionsList = ({ activeSession, completedSessions, handleAddSession }) =>
           </StyledList>
         </>) : (
             <StyledList>
-              <h3>Completed Sessions</h3>
+              <SessionListHeading>
+
+                <h3>Completed Sessions</h3>
+              </SessionListHeading>
               <ListItem>
                 <SessionInfo>
                   No sessions complete.
@@ -319,7 +341,7 @@ const CourseCard = ({ course, ...props }) => {
 
       <SessionListContainer>
         <SessionsList
-          courseId={course.id}
+          course={{ id: course.id, name: course.name }}
           activeSession={activeSession}
           completedSessions={completedSessions}
           handleAddSession={() => handleAddSession()}

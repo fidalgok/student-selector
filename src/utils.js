@@ -12,7 +12,7 @@ export function formatDate(date = new Date(), delimeter = '/') {
   let day = date.getDate();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
-  return `${day}${delimeter}${month}${delimeter}${year}`
+  return `${month}${delimeter}${day}${delimeter}${year}`
 }
 
 // Add api functionality here
