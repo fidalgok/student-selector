@@ -16,20 +16,36 @@ const LoggedOut = (props) => {
           ...state,
           [action.e.target.name]: action.e.target.value
         }
+      case 'resetForm':
+        return {
+          username: '',
+          password: '',
+          confirmationCode: '',
+          email: '',
+        }
       default:
         return state;
     }
   }, {
-      username: '',
-      password: '',
-      confirmationCode: '',
-      email: '',
+    username: '',
+    password: '',
+    confirmationCode: '',
+    email: '',
 
-    });
+  });
 
   React.useEffect(() => {
-    window.localStorage.setItem('formType', formType);
-    setFormError(null);
+    let isCurrent = true;
+    if (isCurrent) {
+
+      window.localStorage.setItem('formType', formType);
+      setFormError(null);
+    }
+    return () => {
+      isCurrent = false;
+      window.localStorage.setItem('formType', 'signIn');
+
+    }
   }, [formType])
 
   function renderForm() {
@@ -51,6 +67,7 @@ const LoggedOut = (props) => {
             confirmSignUp={() => confirmSignUp(formState, setFormType, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
             updateFormType={setFormType}
+            resetForm={() => updateFormState({ type: 'resetForm' })}
             formError={formError}
           />
         );
@@ -58,7 +75,7 @@ const LoggedOut = (props) => {
         return (
           <SignInForm
             setFormType={setFormType}
-            signIn={() => signIn(formState, setFormError)}
+            signIn={() => signIn(formState, setFormError, updateFormState, setFormType)}
             updateFormState={e => updateFormState({
               type: 'updateFormState', e
             })}
@@ -73,15 +90,19 @@ const LoggedOut = (props) => {
             setFormType={setFormType}
             forgotPassword={() => forgotPassword(formState.username, setFormType, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
+            updateFormType={setFormType}
+            resetForm={() => updateFormState({ type: 'resetForm' })}
           />
         )
       case 'forgotPasswordSubmit':
         return (
           <UpdatePasswordForm
+            formError={formError}
             username={formState.username}
             submitNewPassword={() => forgotPasswordSubmit(formState.username, formState.passwordResetCode, formState.password, setFormError)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
-            setFormType={setFormType}
+            updateFormType={setFormType}
+            resetForm={() => updateFormState({ type: 'resetForm' })}
           />
         )
       default:
@@ -125,9 +146,11 @@ async function confirmSignUp({ username, confirmationCode, password }, _, setFor
   }
 }
 
-async function signIn({ username, password }, setFormError) {
+async function signIn({ username, password }, setFormError, updateFormState, setFormType) {
   try {
     await Auth.signIn(username, password);
+    updateFormState({ type: 'resetForm' });
+    setFormType('signIn')
     setFormError(null);
   } catch (err) {
     if (err.code === 'UserNotFoundException') {
@@ -148,12 +171,33 @@ async function forgotPassword(username, setFormType, setFormError) {
   }
 }
 
-async function forgotPasswordSubmit(username, code, newPassword) {
+async function forgotPasswordSubmit(username, code, newPassword, setFormError) {
 
   try {
     const data = await Auth.forgotPasswordSubmit(username, code, newPassword)
 
-  } catch (error) { console.log(error) }
+  } catch (error) {
+    console.log(error)
+    if (error === 'Password cannot be empty') {
+
+      setFormError(error)
+    }
+    if (error.code === 'CodeMismatchException') {
+      setFormError(error.message)
+    }
+    if (error === 'Code cannot be empty') {
+      setFormError(error)
+    }
+    if (error === 'Username cannot be empty') {
+      setFormError(error)
+    }
+    if (error.code === 'InvalidParameterException') {
+      setFormError('Password must be at least 6 characters')
+    }
+    if (error.code === 'UserNotFoundException') {
+      setFormError('Username does not exist, try signing up')
+    }
+  }
 
 }
 export default LoggedOut;

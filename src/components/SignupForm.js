@@ -23,6 +23,14 @@ const AlertError = styled(AlertErrorBase)`
   display: flex;
 `;
 
+export const ResetFormButtons = styled.div`
+ margin-top: 1.2rem;
+ button.reset, span {
+  color: var(--color-neutral-6);
+  font-weight: normal;
+  padding: 1.2rem 1rem;
+ }
+`;
 
 export const SignIn = (props) => {
   return (
@@ -69,13 +77,14 @@ function ConfirmSignUp(props) {
         onChange={e => { e.persist(); props.updateFormState(e) }}
         style={{ marginBottom: '1.6rem' }}
       />
-      <Button>
+      <Button type='submit' style={{ width: '24rem' }}>
         Confirm Sign Up
       </Button>
-      <div>
-        <Button className="secondary" onClick={() => props.updateFormType('signUp')}>Sign Up</Button>
-        <Button className="secondary" onClick={() => props.updateFormType('signIn')}>Sign In</Button>
-      </div>
+      <ResetFormButtons>
+        <span>Back to:</span>
+        <Button type="button" className="secondary reset" onClick={() => { props.resetForm(); props.updateFormType('signUp') }}>Sign Up</Button>
+        <Button type="button" className="secondary reset" onClick={() => { props.resetForm(); props.updateFormType('signIn') }}>Sign In</Button>
+      </ResetFormButtons>
       {!!props.formError && (
         <AlertError style={{ marginTop: '1.6rem' }}><IconError style={{ display: 'inline-block', marginRight: '1rem' }} />{props.formError}</AlertError>
       )}
@@ -93,7 +102,7 @@ const SignUpForm = (props) => {
     <FormContainer>
       {props.formType === "confirmSignUp" ? <ConfirmSignUp {...props} /> : (
 
-        <Form onSubmit={handleSubmit} style={{ borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}>
+        <Form onSubmit={handleSubmit} >
           <Title className="color-dark">Sign Up</Title>
           {/* inputs, forgot password, signin button */}
           <Input

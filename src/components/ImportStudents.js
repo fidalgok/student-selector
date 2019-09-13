@@ -20,16 +20,25 @@ const ImportStudents = ({
     if (!!window) {
       mql = matchMedia('(max-width: 520px)');
       setmqSmall(mql.matches);
-      mql.addEventListener('change', handleMediaChange);
+      try {
+        mql.addEventListener('change', handleMediaChange);
+
+      } catch (err) {
+        mql.addListener(handleMediaChange);
+      }
     }
     return () => {
-      mql.removeEventListener('change', handleMediaChange);
+      try {
+
+        mql.removeEventListener('change', handleMediaChange);
+      } catch (err) { }
     }
   }, [mqSmall])
 
   function handleMediaChange(evt) {
-    console.log(evt.target)
-    setmqSmall(evt.target.matches);
+    if (evt.target) {
+      setmqSmall(evt.target.matches);
+    }
   }
 
   const handleUpload = () => {
