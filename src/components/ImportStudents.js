@@ -1,13 +1,8 @@
 import React from 'react';
 import papa from 'papaparse';
-import styled from '@emotion/styled'
 import VisuallyHidden from '@reach/visually-hidden';
-import ButtonBase from './styled/Button';
+import Button from './styled/Button';
 
-const Button = styled(ButtonBase)`
-
-
-`;
 
 const ImportStudents = ({
   onSubmitStudents = () => { },
@@ -15,9 +10,27 @@ const ImportStudents = ({
   currentStudents
 }) => {
   const [error, setError] = React.useState(null);
+  const [mqSmall, setmqSmall] = React.useState(window !== undefined ? matchMedia('(max-width: 520px)') : false);
   const [studentImports, setStudentImports] = React.useState([]);
   const [showPreview, setShowPreview] = React.useState(false);
   const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    let mql;
+    if (!!window) {
+      mql = matchMedia('(max-width: 520px)');
+      setmqSmall(mql.matches);
+      mql.addEventListener('change', handleMediaChange);
+    }
+    return () => {
+      mql.removeEventListener('change', handleMediaChange);
+    }
+  }, [mqSmall])
+
+  function handleMediaChange(evt) {
+    console.log(evt.target)
+    setmqSmall(evt.target.matches);
+  }
 
   const handleUpload = () => {
     onSubmitStudents([...studentImports, ...currentStudents]);
@@ -61,15 +74,16 @@ const ImportStudents = ({
     }
   }
   return (
-    <div style={{ marginBottom: '2.4rem' }}>
-      <p>Or upload a .csv file with a column header of one of the following: </p>
+    <div style={{ marginBottom: '2.4rem', display: `${mqSmall ? 'none' : 'block'}` }}>
+      <h3>CSV Import</h3>
+      <p>Upload a .csv file with a single column. The header should be one of the following: </p>
       <ul style={{ margin: '1.6rem 0', padding: 0 }}>
-        <p>Please note all column names are case insensitive</p>
+        <p>Please note the column heading is case insensitive.</p>
         <li style={{ margin: '0 1.6rem' }} > student name</li>
         <li style={{ margin: '0 1.6rem' }} > studentname</li>
         <li style={{ margin: '0 1.6rem' }} > student_name</li>
       </ul>
-      <Button className="primary" as="label" htmlFor="students-import">Import Students</Button>
+      <Button className="primary" as="label" htmlFor="students-import">Choose File</Button>
 
       {error ? <p>{error}</p> : null}
       <VisuallyHidden>

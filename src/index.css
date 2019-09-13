@@ -13,8 +13,8 @@
   --color-secondary-4: hsl(44, 92%, 73%);
   --color-secondary-2: hsl(48, 100%, 88%);
   --color-secondary-1: hsl(49, 100%, 96%);
-  --color-white: hsl(40, 83%, 99%);
-  --color-black: hsl(42, 13%, 4%);
+  --color-white: hsl(45, 67%, 99%);
+  --color-black: hsl(40, 16%, 4%);
   --color-red-10: hsl(358, 89%, 15%);
   --color-red-8: hsl(358, 79%, 32%);
   --color-red-4: hsl(354, 72%, 66%);
@@ -31,7 +31,9 @@
 *, *:before, *:after {
  box-sizing: border-box;
 }
-
+*::selection{
+  background-color: var(--color-secondary-5);
+}
 html {
   font-size: 62.5%;
 }

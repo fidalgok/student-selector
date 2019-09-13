@@ -10,7 +10,7 @@ import { listCourses, listSessions } from '../utils';
 export const AppContainer = styled(Container)`
   &::before {
     position: absolute;
-    background: var(--color-neutral-10);
+    background: var(--color-red-10);
     z-index: -1;
     left: 0;
     top:0;

@@ -5,6 +5,7 @@ export const createCourse = `mutation CreateCourse($input: CreateCourseInput!) {
   createCourse(input: $input) {
     id
     name
+    owner
     students {
       name
     }
@@ -14,6 +15,7 @@ export const createCourse = `mutation CreateCourse($input: CreateCourseInput!) {
         status
         createdAt
         updatedAt
+        completedAt
       }
       nextToken
     }
@@ -26,6 +28,7 @@ export const updateCourse = `mutation UpdateCourse($input: UpdateCourseInput!) {
   updateCourse(input: $input) {
     id
     name
+    owner
     students {
       name
     }
@@ -35,6 +38,7 @@ export const updateCourse = `mutation UpdateCourse($input: UpdateCourseInput!) {
         status
         createdAt
         updatedAt
+        completedAt
       }
       nextToken
     }
@@ -47,6 +51,7 @@ export const deleteCourse = `mutation DeleteCourse($input: DeleteCourseInput!) {
   deleteCourse(input: $input) {
     id
     name
+    owner
     students {
       name
     }
@@ -56,6 +61,7 @@ export const deleteCourse = `mutation DeleteCourse($input: DeleteCourseInput!) {
         status
         createdAt
         updatedAt
+        completedAt
       }
       nextToken
     }
@@ -80,6 +86,7 @@ export const createSession = `mutation CreateSession($input: CreateSessionInput!
     course {
       id
       name
+      owner
       students {
         name
       }
@@ -92,6 +99,7 @@ export const createSession = `mutation CreateSession($input: CreateSessionInput!
     status
     createdAt
     updatedAt
+    completedAt
   }
 }
 `;
@@ -111,6 +119,7 @@ export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!
     course {
       id
       name
+      owner
       students {
         name
       }
@@ -123,6 +132,7 @@ export const updateSession = `mutation UpdateSession($input: UpdateSessionInput!
     status
     createdAt
     updatedAt
+    completedAt
   }
 }
 `;
@@ -142,6 +152,7 @@ export const deleteSession = `mutation DeleteSession($input: DeleteSessionInput!
     course {
       id
       name
+      owner
       students {
         name
       }
@@ -154,6 +165,7 @@ export const deleteSession = `mutation DeleteSession($input: DeleteSessionInput!
     status
     createdAt
     updatedAt
+    completedAt
   }
 }
 `;

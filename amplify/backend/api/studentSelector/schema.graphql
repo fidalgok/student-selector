@@ -3,6 +3,7 @@ type Course
   @auth(rules: [{allow: owner}]){
     id: ID!
     name: String!
+    owner: String
     students: [Student]!
     sessions: [Session]! @connection(name: "CourseSessions")
     createdAt: String
@@ -10,7 +11,9 @@ type Course
   }
 
 type Session @model(subscriptions: null)
-  @auth(rules: [{allow: owner}]){
+  @auth(rules: [{allow: owner}])
+
+  {
     id: ID!
     calledStudents: [SessionScore]!
     remainingStudents: [Student]!
@@ -18,6 +21,7 @@ type Session @model(subscriptions: null)
     status: SessionStatus!
     createdAt: String
     updatedAt: String
+    completedAt: String
 }
 
 type SessionScore {

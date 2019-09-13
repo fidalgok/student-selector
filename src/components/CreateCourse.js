@@ -41,7 +41,7 @@ export function EditCourseForm({ handleSubmit, cancelButton, course = { name: nu
         <InputDiv>
           <input type="text" id="courseName" name="courseName" placeholder="Enter a course name" onChange={(e) => { setCourseName(e.target.value) }} value={courseName} />
           <Button type="submit">Save</Button>
-          {cancelButton && <Button className="secondary">Cancel</Button>}
+          {cancelButton && <Button type='button' onClick={props.onCancel}>Cancel</Button>}
         </InputDiv>
       </div>
     </form>

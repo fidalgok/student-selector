@@ -26,6 +26,11 @@ const StudentList = styled.div`
   padding: 1.2rem 0;
 `;
 
+const StudentActionsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+`;
+
 const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
   // use updatedStudents to handle state of this component, will
   // send only the name to the courseDispatch for updates
@@ -97,7 +102,7 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
         <Link to="/" style={{ margin: '0 1.2rem 0 0', color: 'inherit' }}>Dashboard</Link> &rarr;
             <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> New Course</p>
       </nav>
-      {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} handleCancel={() => setEditCourseName(false)} style={{ marginTop: '2.4rem' }} />}
+      {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} onCancel={() => setEditCourseName(false)} style={{ marginTop: '2.4rem' }} />}
       {!editCourseName && (
         <div style={{ marginTop: '2.4rem' }}>
           <span style={{ fontSize: '3.2rem' }}>{course.name}</span>
@@ -105,34 +110,36 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
         </div>
       )}
 
-      <div>
+      <StudentActionsContainer>
 
         <CreateStudentForm studentList={course.students} courseId={course.id} courseDispatch={courseDispatch} />
         <FileUploader onSubmitStudents={handleFileLoad} currentStudents={course.students} />
-        <h2>Current Students</h2>
-        {updatedStudents.map((student) => {
-          return student.isEditing ? (
-            <EditStudent
-              key={student.id}
-              student={student}
-              updatedStudents={updatedStudents}
-              courseDispatch={courseDispatch}
-              handleCancel={handleEditStudentClick}
-            />
-          ) : (
-              <StudentList key={student.id}>
-                <span style={{ flexBasis: '60%' }}>
-                  {student.name}
-                </span>
-                <div>
+        <div style={{ gridColumn: '1/-1' }}>
+          <h2>Current Students</h2>
+          {updatedStudents.map((student) => {
+            return student.isEditing ? (
+              <EditStudent
+                key={student.id}
+                student={student}
+                updatedStudents={updatedStudents}
+                courseDispatch={courseDispatch}
+                handleCancel={handleEditStudentClick}
+              />
+            ) : (
+                <StudentList key={student.id}>
+                  <span style={{ flexBasis: '60%' }}>
+                    {student.name}
+                  </span>
+                  <div>
 
-                  <Button className="secondary" data-id={student.id} onClick={handleEditStudentClick}>Edit</Button>
-                  <Button className="danger" data-id={student.id} onClick={handleDeleteStudentClick}>Delete</Button>
-                </div>
-              </StudentList>
-            )
-        })}
-      </div>
+                    <Button data-id={student.id} onClick={handleEditStudentClick}>Edit</Button>
+                    <Button data-id={student.id} onClick={handleDeleteStudentClick}>Delete</Button>
+                  </div>
+                </StudentList>
+              )
+          })}
+        </div>
+      </StudentActionsContainer>
     </>)
   }
   return renderEditCourse();
@@ -164,8 +171,8 @@ function EditStudent({ student, handleCancel, courseDispatch, updatedStudents })
   return (
     <InputDiv as='div'>
       <input type='text' id={student.name} name={student.name} value={value} onChange={handleChange} ref={inputRef} />
-      <Button className="secondary" data-id={student.id} onClick={handleSubmit}>Save</Button>
-      <Button className="secondary" data-id={student.id} onClick={handleCancel}>Cancel</Button>
+      <Button data-id={student.id} onClick={handleSubmit}>Save</Button>
+      <Button data-id={student.id} onClick={handleCancel}>Cancel</Button>
     </InputDiv>
   )
 }

@@ -5,6 +5,7 @@ export const getCourse = `query GetCourse($id: ID!) {
   getCourse(id: $id) {
     id
     name
+    owner
     students {
       name
     }
@@ -14,6 +15,7 @@ export const getCourse = `query GetCourse($id: ID!) {
         status
         createdAt
         updatedAt
+        completedAt
       }
       nextToken
     }
@@ -31,6 +33,7 @@ export const listCourses = `query ListCourses(
     items {
       id
       name
+      owner
       students {
         name
       }
@@ -60,6 +63,7 @@ export const getSession = `query GetSession($id: ID!) {
     course {
       id
       name
+      owner
       students {
         name
       }
@@ -72,6 +76,7 @@ export const getSession = `query GetSession($id: ID!) {
     status
     createdAt
     updatedAt
+    completedAt
   }
 }
 `;
@@ -93,12 +98,14 @@ export const listSessions = `query ListSessions(
       course {
         id
         name
+        owner
         createdAt
         updatedAt
       }
       status
       createdAt
       updatedAt
+      completedAt
     }
     nextToken
   }
