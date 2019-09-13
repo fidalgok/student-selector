@@ -181,11 +181,13 @@ const HeaderContainer = styled.div`
 
 `;
 
-const SessionHeader = ({ createdAt = new Date(), status = 'NEW' }) => {
+const SessionHeader = ({ createdAt = new Date(), completedAt = new Date(), status = 'NEW' }) => {
   const formattedDate = formatDate(new Date(createdAt));
+  const completedDate = formatDate(new Date(completedAt))
+  const completedText = status === 'COMPLETE' ? `Completed on: ${completedDate}` : `Created on: ${formattedDate}`;
   return (
     <HeaderContainer>
-      <span className="date">Started on: {formattedDate}</span>
+      <span className="date">{completedText}</span>
       <span className={status === 'COMPLETE' ? `status complete` : 'status'}>{status.toLowerCase()}</span>
     </HeaderContainer>
   )
@@ -235,9 +237,17 @@ const SessionsList = ({ activeSession, completedSessions, handleAddSession }) =>
             <h3>Completed Sessions</h3>
 
 
-            {completedSessions.map(session => (
+            {completedSessions.slice().sort((a, b) => {
+
+              if (a.completedAt === null && b.completedAt === null) return 0
+              if (a.completedAt === null && b.completedAt !== null) return 1
+              if (a.completedAt !== null && b.completedAt === null) return -1
+              if (new Date(a.completedAt) > new Date(b.completedAt)) return -1;
+              if (new Date(a.completedAt) < new Date(b.completedAt)) return 1;
+              return 0;
+            }).map(session => (
               <ListItem key={session.id}>
-                <SessionHeader createdAt={session.createdAt} status={session.status} />
+                <SessionHeader createdAt={session.createdAt} status={session.status} completedAt={session.completedAt} />
                 <SessionInfo>
                   <Button as={Link} to={{ pathname: `/session/${session.id}`, state: { viewOnly: true } }} className="session-results">View Results</Button>
                 </SessionInfo>

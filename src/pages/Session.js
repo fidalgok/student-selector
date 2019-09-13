@@ -192,7 +192,7 @@ const Session = ({ session, ...props }) => {
 
   const handleCompleteSession = async () => {
 
-    const { error } = await updateSession(sessionDispatch, { id: session.id }, 'COMPLETE');
+    const { error } = await updateSession(sessionDispatch, { id: session.id, completedAt: new Date() }, 'COMPLETE');
     if (error) console.log('error completing session', JSON.stringify(error, null, 2));
 
   }

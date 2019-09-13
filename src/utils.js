@@ -201,6 +201,7 @@ export const listSessions = async (sessionDispatch, limit = 30) => {
               id
               status
               createdAt
+              completedAt
               course{
                 id
                 name
@@ -284,6 +285,7 @@ export const updateSession = async (sessionDispatch = () => { }, updatedSession 
       updateSession(input: $input){
         id
         status
+        completedAt
         course{id name}
         calledStudents{
           student{name}
