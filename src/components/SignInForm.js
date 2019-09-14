@@ -15,6 +15,11 @@ const Container = styled.div`
   padding: 4.8rem 2.4rem;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
+
+  @media (max-width: 650px){
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 0px;
+  }
 `;
 
 const ResetButton = styled(Button)`
@@ -30,7 +35,7 @@ const SignUp = (props) => {
   return (
     <Container>
       <Title className="color-light">Hello Friend!</Title>
-      <p style={{ color: 'var(--color-white)', margin: '0', fontSize: '1.8rem', textAlign: 'center' }}>Need an account? <br />Enter your information to start calling your students!</p>
+      <p style={{ color: 'var(--color-white)', fontSize: '1.8rem', textAlign: 'center' }}>Need an account? <br />Enter your information to start calling your students!</p>
       <Button
         className="invert-color"
         onClick={props.updateFormType}

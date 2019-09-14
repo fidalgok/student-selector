@@ -16,6 +16,11 @@ const Container = styled.div`
   padding: 4.8rem 2.4rem;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
+
+  @media (max-width: 650px){
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 0px;
+  }
 `;
 
 const AlertError = styled(AlertErrorBase)`
@@ -37,7 +42,7 @@ export const SignIn = (props) => {
     <Container>
 
       <Title className="color-light">Already have an account?</Title>
-      <p style={{ color: 'var(--color-white)', margin: '0', fontSize: '1.8rem', textAlign: 'center' }}>Glad you're back! <br />Please login with your personal info.</p>
+      <p style={{ color: 'var(--color-white)', fontSize: '1.8rem', textAlign: 'center' }}>Glad you're back! <br />Please login with your personal info.</p>
       <Button
         className='invert-color'
         onClick={() => props.updateFormType('signIn')}
@@ -51,7 +56,7 @@ function ConfirmSignUp(props) {
   return (
     <Form
       onSubmit={(e) => { e.preventDefault(); props.confirmSignUp() }}
-      style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}
+      style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px' }}
     >
       <Title className="color-dark">You've got mail!</Title>
       <p style={{ marginTop: '0' }}>Check your email for a confirmation code.</p>

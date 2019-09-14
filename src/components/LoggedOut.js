@@ -1,9 +1,43 @@
 import React from 'react';
-import { Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify';
+import styled from '@emotion/styled';
 import SignUpForm from './SignupForm';
 import SignInForm from './SignInForm';
 import ForgotPasswordForm, { UpdatePasswordForm } from './ForgotPasswordForm';
+import { AppLogo } from './styled/Icons';
 
+const LoggedOutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+`;
+const LoggedOutWrapper = styled.div`
+  border-radius: 15px;
+  box-shadow: 2px 4px 8px rgba(10,10,0, .2),
+              0px 2px 2px rgba(10,10,0, .2);
+`;
+
+const AppTitle = styled.h1`
+  font-size: 4.8rem;
+  margin: 0;
+  display: inline-block;
+
+  @media (max-width: 430px){
+    font-size: 3.2rem;
+  }
+`;
+
+const Logo = styled(AppLogo)`
+  width: 6rem;
+  display: inline-block;
+  margin-right: 2.4rem;
+  @media (max-width: 430px){
+    flex-basis: 20%;
+  }
+`;
 
 const LoggedOut = (props) => {
 
@@ -109,9 +143,16 @@ const LoggedOut = (props) => {
         return null;
     }
   }
-  return (<>
-    {renderForm()}
-  </>);
+  return (<LoggedOutContainer>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.4rem' }}>
+
+      <Logo /><AppTitle>Student Selector</AppTitle>
+    </div>
+    <LoggedOutWrapper>
+
+      {renderForm()}
+    </LoggedOutWrapper>
+  </LoggedOutContainer>);
 }
 
 async function signUp({ username, password, email }, setFormType, setFormError) {

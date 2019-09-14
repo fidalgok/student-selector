@@ -28,16 +28,21 @@ export const Form = styled.form`
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
   padding: 4.8rem 2.4rem;
+  @media (max-width: 650px){
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 15px;
+  }
 `;
 
 export const FormContainer = styled.div`
   display: grid;
   grid-template-columns: 32rem 32rem;
-  background: var(--color-neutral-2);
-  min-height: 100vh;
   align-content:center;
   justify-content: center;
   margin: auto;
+  @media (max-width: 650px){
+    grid-template-columns: 32rem;
+  }
 `;
 
 export const Title = styled.p`

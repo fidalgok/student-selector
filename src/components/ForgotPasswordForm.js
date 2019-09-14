@@ -16,7 +16,7 @@ const ForgotPasswordForm = (props) => {
   }
   return (
     <FormContainer>
-      <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}>
+      <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px' }}>
         <Title className="color-dark">Forgot Password</Title>
         <Input
           name='username'
@@ -53,7 +53,7 @@ const UpdatePasswordForm = (props) => {
 
   return (
     <FormContainer>
-      <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}>
+      <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px' }}>
         <Title className="color-dark">Password Reset</Title>
         <p style={{ marginTop: '0' }}>Check your email for a confirmation code.</p>
         <p style={{ marginTop: '0' }}>Need a new code? <span
