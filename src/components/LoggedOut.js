@@ -133,7 +133,7 @@ const LoggedOut = (props) => {
           <UpdatePasswordForm
             formError={formError}
             username={formState.username}
-            submitNewPassword={() => forgotPasswordSubmit(formState.username, formState.passwordResetCode, formState.password, setFormError)}
+            submitNewPassword={() => forgotPasswordSubmit(formState.username, formState.passwordResetCode, formState.password, setFormError, setFormType)}
             updateFormState={e => updateFormState({ type: 'updateFormState', e })}
             updateFormType={setFormType}
             resetForm={() => updateFormState({ type: 'resetForm' })}
@@ -212,11 +212,11 @@ async function forgotPassword(username, setFormType, setFormError) {
   }
 }
 
-async function forgotPasswordSubmit(username, code, newPassword, setFormError) {
+async function forgotPasswordSubmit(username, code, newPassword, setFormError, setFormType) {
 
   try {
-    const data = await Auth.forgotPasswordSubmit(username, code, newPassword)
-
+    const data = await Auth.forgotPasswordSubmit(username, code, newPassword);
+    setFormType('signIn')
   } catch (error) {
     console.log(error)
     if (error === 'Password cannot be empty') {
