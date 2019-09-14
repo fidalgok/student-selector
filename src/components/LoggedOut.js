@@ -221,23 +221,24 @@ async function forgotPasswordSubmit(username, code, newPassword, setFormError, s
     console.log(error)
     if (error === 'Password cannot be empty') {
 
-      setFormError(error)
+      return setFormError(error)
     }
     if (error.code === 'CodeMismatchException') {
-      setFormError(error.message)
+      return setFormError(error.message)
     }
     if (error === 'Code cannot be empty') {
-      setFormError(error)
+      return setFormError(error)
     }
     if (error === 'Username cannot be empty') {
-      setFormError(error)
+      return setFormError(error)
     }
     if (error.code === 'InvalidParameterException') {
-      setFormError('Password must be at least 6 characters')
+      return setFormError('Password must be at least 6 characters')
     }
     if (error.code === 'UserNotFoundException') {
-      setFormError('Username does not exist, try signing up')
+      return setFormError('Username does not exist, try signing up')
     }
+    return setFormError('Something went wrong, please try again later')
   }
 
 }

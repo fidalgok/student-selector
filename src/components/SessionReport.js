@@ -89,7 +89,7 @@ const SessionReport = ({ course, ...props }) => {
     const studentData = courseSessions
       .filter(sesh => reportType === 'complete' ? sesh.status === 'COMPLETE' : sesh)
       .reduce((prevSesh, curSesh) => {
-        console.log({ curSesh, prevSesh });
+
         const calledStudents = curSesh.calledStudents.map(score => {
           return {
             student_name: score.student.name,
@@ -114,7 +114,7 @@ const SessionReport = ({ course, ...props }) => {
         ];
         return [...prevSesh, ...rows];
       }, []);
-    console.log(studentData);
+
     const csvData = Papa.unparse(studentData, {
       delimiter: ',',
       header: true,
