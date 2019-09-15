@@ -72,6 +72,7 @@ const StudentRatingContainer = styled.div`
   margin-bottom: 2.4rem;
   display: flex;
   flex-grow: 1;
+  flex-basis: 100%;
   justify-content: space-between;
 `;
 

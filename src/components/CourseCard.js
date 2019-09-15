@@ -89,12 +89,14 @@ const CourseInfo = styled.div`
   @media (max-width: 520px){
     display: flex;
     align-items: center;
+    align-items: baseline;
   }
 `;
 const CourseButtons = styled.div`
   @media (max-width: 520px){
     margin-top: 1.2rem;
     display: flex;
+
   }
 `;
 const CourseTitle = styled.p`
