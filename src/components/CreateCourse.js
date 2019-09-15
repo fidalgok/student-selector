@@ -34,7 +34,7 @@ const CreateCourse = ({ history, ...props }) => {
 export function EditCourseForm({ handleSubmit, cancelButton, course = { name: null }, ...props }) {
   const [courseName, setCourseName] = React.useState(course.name || '');
   return (
-    <form {...props} onSubmit={(e) => { e.preventDefault(); handleSubmit(courseName) }}>
+    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(courseName) }}>
 
       <div>
         <label htmlFor="courseName" style={{ display: 'block', color: 'var(--color-neutral-8)', paddingLeft: '10px', marginBottom: '4px', fontSize: '1.4rem' }}>Course Name</label>

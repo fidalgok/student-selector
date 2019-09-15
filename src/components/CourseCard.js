@@ -45,12 +45,14 @@ const Button = styled(BaseButton)`
     }
   &.header-danger{
     color: var(--color-black);
+    margin-right: 0;
     &:hover{
       background: var(--color-neutral-2);
     }
   }
     @media (max-width: 520px){
       margin:0;
+      text-align: center;
     }
   }
   &.session-results{
@@ -73,6 +75,7 @@ const CourseActions = styled.div`
   @media (max-width: 750px){
     padding: 1.2rem;
     margin-bottom: 4.2rem;
+    border-radius: 0px;
   }
 
   @media (max-width: 520px){
@@ -334,7 +337,7 @@ const CourseCard = ({ course, ...props }) => {
           >New Session</Button>}
 
           <Button className="header-secondary" as={Link} to={`/course/${course.id}/edit`}>Manage Students</Button>
-          {!courseSessions.length && <Button onClick={handleDelete} className="header-danger">Delete Course</Button>}
+          {!courseSessions.length && <Button onClick={handleDelete} className="header-danger" style={{ marginRight: '0px' }}>Delete Course</Button>}
         </CourseButtons>
       </CourseActions>
 

@@ -28,6 +28,10 @@ const InputContainer = styled(Input)`
     background: var(--color-neutral-1);
   }
 
+  @media (max-width: 520px){
+    padding: 0 0 0 4px;
+  }
+
   input{
     border: none;
     appearance: none;
@@ -38,6 +42,10 @@ const InputContainer = styled(Input)`
 
     &:focus{
       outline: none;
+    }
+
+    @media (max-width: 520px){
+      margin-right: 0px;
     }
   }
 `;

@@ -22,6 +22,9 @@ const DashboardTitle = styled.h2`
 
 const DashboardButton = styled(Button)`
   text-decoration:none;
+  @media (max-width: 520px){
+    text-align: center;
+  }
 `;
 const Dashboard = (props) => {
   const courseDispatch = useCourseDispatch();
@@ -35,7 +38,7 @@ const Dashboard = (props) => {
           <p>
             Looks like you don't have any courses yet.
           </p>
-          <p><Button className="primary" as={Link} to="/course/new">Create Course</Button></p>
+          <p><DashboardButton className="primary" as={Link} to="/course/new">Create Course</DashboardButton></p>
         </div>
       )
     }

@@ -13,7 +13,7 @@ export default styled.button`
   transition: all .12s ease-in;
 
   @media (max-width: 520px){
-    padding: .4rem .8rem;
+    padding: 1rem .8rem;
   }
 
   &.primary {

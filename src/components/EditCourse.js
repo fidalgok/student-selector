@@ -15,6 +15,11 @@ import FileUploader from './ImportStudents';
 const Button = styled(BaseButton)`
   margin: 0 .8rem;
   padding: .8rem 1rem;
+
+  @media (max-width: 520px){
+
+    padding: .8rem 0;
+  }
 `;
 
 const StudentList = styled.div`
@@ -28,7 +33,7 @@ const StudentList = styled.div`
 
 const StudentActionsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(32rem,1fr));
 `;
 
 const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
