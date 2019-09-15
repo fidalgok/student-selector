@@ -13,6 +13,10 @@ const LoggedOutContainer = styled.div`
   width: 100vw;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 450px){
+    width: auto;
+  }
 `;
 const LoggedOutWrapper = styled.div`
   border-radius: 15px;
@@ -27,6 +31,7 @@ const AppTitle = styled.h1`
 
   @media (max-width: 430px){
     font-size: 3.2rem;
+    flex-basis: 40%;
   }
 `;
 
