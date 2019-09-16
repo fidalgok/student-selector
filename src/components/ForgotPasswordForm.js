@@ -20,7 +20,7 @@ const ForgotPasswordForm = (props) => {
       <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px' }}>
         <Title className="color-dark">Forgot Password</Title>
 
-        <InputDiv style={{ maxWidth: '320px' }}>
+        <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
           <label htmlFor="username">username</label>
           <input type="text" id="username" name="username" onChange={(e) => { e.persist(); props.updateFormState(e) }} />
         </InputDiv>
@@ -74,38 +74,41 @@ const UpdatePasswordForm = (props) => {
         {!!resendCodeMessage.length && (
           <AlertInfo><IconInformation style={{ display: 'inline-block', marginRight: '1rem' }} />{resendCodeMessage}</AlertInfo>
         )}
-        <InputDiv style={{ maxWidth: '320px' }}>
+        <div>
 
-          <label htmlFor="username">username</label>
-          <input
-            name='username'
-            id='username'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
+          <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
 
-            value={props.username || ''}
-          />
-        </InputDiv>
-        <InputDiv style={{ maxWidth: '320px' }}>
+            <label htmlFor="username">username</label>
+            <input
+              name='username'
+              id='username'
+              onChange={e => { e.persist(); props.updateFormState(e) }}
 
-          <label htmlFor="passwordResetCode">reset code</label>
-          <input
-            name='passwordResetCode'
-            id='passwordResetCode'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
+              value={props.username || ''}
+            />
+          </InputDiv>
+          <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
 
-          />
-        </InputDiv>
-        <InputDiv style={{ maxWidth: '320px' }}>
+            <label htmlFor="passwordResetCode">reset code</label>
+            <input
+              name='passwordResetCode'
+              id='passwordResetCode'
+              onChange={e => { e.persist(); props.updateFormState(e) }}
 
-          <label htmlFor="password">password</label>
-          <input
-            name='password'
-            id='password'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
+            />
+          </InputDiv>
+          <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
 
-            type="password"
-          />
-        </InputDiv>
+            <label htmlFor="password">password</label>
+            <input
+              name='password'
+              id='password'
+              onChange={e => { e.persist(); props.updateFormState(e) }}
+
+              type="password"
+            />
+          </InputDiv>
+        </div>
         <Button type="submit" style={{ width: '24rem' }} className="primary">
           Submit
         </Button>

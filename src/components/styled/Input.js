@@ -25,10 +25,10 @@ const Input = styled.input`
 
 const InputContainer = styled.div`
   ${InputBase}
-  display: inline-block;
+  display: flex;
   padding: 0 0 0 1rem;
-  width: 100%;
-
+  align-items: center;
+  align-self:stretch;
   &:focus-within {
     border-bottom: 2px solid var(--color-secondary-5);
     background: var(--color-neutral-1);
@@ -46,13 +46,17 @@ const InputContainer = styled.div`
     font-size: inherit;
     color: inherit;
     padding: 1rem 8px;
-
+    flex-grow: 1;
     &:focus{
       outline: none;
     }
 
     @media (max-width: 520px){
       margin-right: 0px;
+    }
+
+    &.course-edit, &.student-edit{
+      padding: 0;
     }
   }
 

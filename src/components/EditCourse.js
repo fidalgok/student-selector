@@ -105,7 +105,7 @@ const EditCourse = ({ course = { name: '', students: [] }, ...props }) => {
     return (<>
       <nav>
         <Link to="/" style={{ margin: '0 1.2rem 0 0', color: 'inherit' }}>Dashboard</Link> &rarr;
-            <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> New Course</p>
+            <p style={{ display: 'inline-block', margin: '0 0 0 1.2rem' }}> {course.name}</p>
       </nav>
       {editCourseName && <EditCourseForm handleSubmit={handleCourseSubmit} cancelButton={true} course={course} onCancel={() => setEditCourseName(false)} style={{ marginTop: '2.4rem' }} />}
       {!editCourseName && (

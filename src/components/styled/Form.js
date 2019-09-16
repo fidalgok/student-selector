@@ -8,7 +8,10 @@ export const FormContainer = styled.div`
   justify-content: center;
   margin: auto;
   @media (max-width: 650px){
-    grid-template-columns: 32rem;
+    grid-template-columns: 52rem;
+  }
+  @media (max-width: 520px){
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -25,6 +28,7 @@ export const Form = styled.form`
   @media (max-width: 650px){
     border-bottom-left-radius: 0px;
     border-top-right-radius: 15px;
+    padding: 3.2rem 1.6rem;
   }
 `;
 
