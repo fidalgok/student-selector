@@ -1,13 +1,14 @@
+/* @jsx jsx */
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from '@emotion/styled/macro';
+import { css } from '@emotion/core'
 
-const Input = styled.input`
+const InputBase = css`
   padding: 1rem 8px;
   border-radius: 5px;
   background-color: var(--color-neutral-2);
   border: none;
   margin-bottom: 1.2rem;
-  width: 24rem;
   border-bottom: 2px inset hsla(0, 0%, 0%, 0);
   font-size: inherit;
   color: inherit;
@@ -18,10 +19,15 @@ const Input = styled.input`
   }
 `;
 
-const InputContainer = styled(Input)`
+const Input = styled.input`
+ ${InputBase}
+`;
+
+const InputContainer = styled.div`
+  ${InputBase}
   display: inline-block;
-  padding: 0 1rem;
-  width: auto;
+  padding: 0 0 0 1rem;
+  width: 100%;
 
   &:focus-within {
     border-bottom: 2px solid var(--color-secondary-5);
@@ -31,14 +37,15 @@ const InputContainer = styled(Input)`
   @media (max-width: 520px){
     padding: 0 0 0 4px;
   }
-
-  input{
+  label {
+    color: var(--color-neutral-6);
+  }
+  input {
     border: none;
-    appearance: none;
     background: none;
     font-size: inherit;
     color: inherit;
-    margin-right: 1.2rem;
+    padding: 1rem 8px;
 
     &:focus{
       outline: none;
@@ -48,10 +55,9 @@ const InputContainer = styled(Input)`
       margin-right: 0px;
     }
   }
+
+
 `;
 
-function InputDiv(props) {
-  return <InputContainer as='div'>{props.children}</InputContainer>
-}
 
-export { Input as default, InputDiv };
+export { Input as default, InputContainer as InputDiv };

@@ -174,8 +174,8 @@ function EditStudent({ student, handleCancel, courseDispatch, updatedStudents })
     }
   }
   return (
-    <InputDiv as='div'>
-      <input type='text' id={student.name} name={student.name} value={value} onChange={handleChange} ref={inputRef} />
+    <InputDiv style={{ display: 'flex', width: '100%', maxWidth: '520px', padding: '.95rem 0px', marginBottom: '0px' }}>
+      <input style={{ flexGrow: 1 }} type='text' id={student.name} name={student.name} value={value} onChange={handleChange} ref={inputRef} />
       <Button data-id={student.id} onClick={handleSubmit}>Save</Button>
       <Button data-id={student.id} onClick={handleCancel}>Cancel</Button>
     </InputDiv>

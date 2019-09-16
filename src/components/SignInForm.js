@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { FormContainer, Form, Input, Button, Title } from './styled/Form'
+import { FormContainer, Form, Input, Button, Title, Label } from './styled/Form'
+import { InputDiv } from './styled/Input';
 import { IconError } from './styled/Icons';
 import AlertError from './styled/AlertError';
 
@@ -54,19 +55,25 @@ const SignInForm = (props) => {
     <FormContainer>
       <Form onSubmit={handleSubmit}>
         <Title className="color-dark">Sign In</Title>
-        <Input
-          name='username'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
+        <InputDiv>
+          <label htmlFor="username">username</label>
+          <input
+            name='username'
+            onChange={e => { e.persist(); props.updateFormState(e) }}
+            id='username'
 
-          placeholder='username'
-        />
-        <Input
-          type='password'
-          name='password'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
+          />
+        </InputDiv>
+        <InputDiv>
+          <label htmlFor="password">password</label>
+          <input
+            type='password'
+            name='password'
+            onChange={e => { e.persist(); props.updateFormState(e) }}
+            id="password"
 
-          placeholder='password'
-        />
+          />
+        </InputDiv>
         <Button onClick={props.signIn} className="primary">
           Sign In
         </Button>

@@ -1,20 +1,14 @@
 import styled from '@emotion/styled';
 import ButtonBase from './Button';
 
-export const Input = styled.input`
-   padding: 1rem 8px;
-  border-radius: 5px;
-  background-color: var(--color-neutral-2);
-  border: none;
-  margin-bottom: 1.2rem;
-  width: 24rem;
-  border-bottom: 2px inset hsla(0, 0%, 0%, 0);
-  font-size: inherit;
-  color: inherit;
-  &:focus {
-    outline: none;
-    border-bottom: 2px inset var(--color-secondary-5);
-    background-color: var(--color-neutral-1);
+export const FormContainer = styled.div`
+  display: grid;
+  grid-template-columns: 32rem 32rem;
+  align-content:center;
+  justify-content: center;
+  margin: auto;
+  @media (max-width: 650px){
+    grid-template-columns: 32rem;
   }
 `;
 
@@ -34,17 +28,6 @@ export const Form = styled.form`
   }
 `;
 
-export const FormContainer = styled.div`
-  display: grid;
-  grid-template-columns: 32rem 32rem;
-  align-content:center;
-  justify-content: center;
-  margin: auto;
-  @media (max-width: 650px){
-    grid-template-columns: 32rem;
-  }
-`;
-
 export const Title = styled.p`
   font-size: 2.8rem;
   font-weight: 800;
@@ -57,6 +40,31 @@ export const Title = styled.p`
 
   &.color-dark {
     color: var(--color-neutral-10);
+  }
+`;
+
+export const Label = styled.label`
+  margin-bottom: 4px;
+  font-size: 1.4rem;
+  color: var(--color-neutral-8);
+  display: block;
+  align-self: flex-start;
+`;
+
+export const Input = styled.input`
+   padding: 1rem 8px;
+  border-radius: 5px;
+  background-color: var(--color-neutral-2);
+  border: none;
+  margin-bottom: 2.4rem;
+  width: 100%;
+  border-bottom: 2px inset hsla(0, 0%, 0%, 0);
+  font-size: inherit;
+  color: inherit;
+  &:focus {
+    outline: none;
+    border-bottom: 2px inset var(--color-secondary-5);
+    background-color: var(--color-neutral-1);
   }
 `;
 

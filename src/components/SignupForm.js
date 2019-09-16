@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Auth } from 'aws-amplify';
-import { Input, Form, FormContainer, Title, Button } from './styled/Form';
+import { Input, Form, FormContainer, Title, Button, Label } from './styled/Form';
+import { InputDiv } from './styled/Input';
 import AlertErrorBase from './styled/AlertError';
 import AlertInfo from './styled/AlertInfo';
 import { IconError, IconInformation } from './styled/Icons';
@@ -76,12 +77,17 @@ function ConfirmSignUp(props) {
       {!!resendCodeMessage.length && (
         <AlertInfo><IconInformation style={{ display: 'inline-block', marginRight: '1rem' }} />{resendCodeMessage}</AlertInfo>
       )}
-      <Input
-        name='confirmationCode'
-        placeholder='Confirmation Code'
-        onChange={e => { e.persist(); props.updateFormState(e) }}
-        style={{ marginBottom: '1.6rem' }}
-      />
+      <InputDiv style={{ maxWidth: '320px' }}>
+
+        <label htmlFor="confirmationCode">code</label>
+        <input
+          name='confirmationCode'
+          id='confirmationCode'
+
+          onChange={e => { e.persist(); props.updateFormState(e) }}
+
+        />
+      </InputDiv>
       <Button type='submit' style={{ width: '24rem' }}>
         Confirm Sign Up
       </Button>
@@ -109,23 +115,34 @@ const SignUpForm = (props) => {
 
         <Form onSubmit={handleSubmit} >
           <Title className="color-dark">Sign Up</Title>
-          {/* inputs, forgot password, signin button */}
-          <Input
-            name='username'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
-            placeholder='username'
-          />
-          <Input
-            type='password'
-            name='password'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
-            placeholder='password'
-          />
-          <Input
-            name='email'
-            onChange={e => { e.persist(); props.updateFormState(e) }}
-            placeholder='email'
-          />
+          <InputDiv>
+            <label htmlFor="username">username</label>
+            <input
+              name='username'
+              id='username'
+              onChange={e => { e.persist(); props.updateFormState(e) }}
+
+            />
+          </InputDiv>
+          <InputDiv>
+            <label htmlFor="password">password</label>
+            <input
+              type='password'
+              name='password'
+              id="password"
+              onChange={e => { e.persist(); props.updateFormState(e) }}
+
+            />
+          </InputDiv>
+          <InputDiv>
+            <label htmlFor="email">email</label>
+            <input
+              name='email'
+              id='email'
+              onChange={e => { e.persist(); props.updateFormState(e) }}
+
+            />
+          </InputDiv>
           <Button type="submit">Sign Up</Button>
 
           {!!props.formError && (

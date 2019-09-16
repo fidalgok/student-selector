@@ -38,7 +38,7 @@ export function EditCourseForm({ handleSubmit, cancelButton, course = { name: nu
 
       <div>
         <label htmlFor="courseName" style={{ display: 'block', color: 'var(--color-neutral-8)', paddingLeft: '10px', marginBottom: '4px', fontSize: '1.4rem' }}>Course Name</label>
-        <InputDiv>
+        <InputDiv style={{ width: 'auto' }}>
           <input type="text" id="courseName" name="courseName" placeholder="Enter a course name" onChange={(e) => { setCourseName(e.target.value) }} value={courseName} />
           <Button type="submit">Save</Button>
           {cancelButton && <Button type='button' onClick={props.onCancel}>Cancel</Button>}

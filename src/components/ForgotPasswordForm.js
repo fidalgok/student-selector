@@ -1,8 +1,9 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
-import { FormContainer, Form, Title, Input, Button } from './styled/Form';
+import { FormContainer, Form, Title, Input, Button, Label } from './styled/Form';
 import { ResetFormButtons } from './SignupForm';
 import { IconError, IconInformation } from './styled/Icons';
+import { InputDiv } from './styled/Input'
 import AlertError from './styled/AlertError';
 import AlertInfo from './styled/AlertInfo';
 
@@ -18,11 +19,11 @@ const ForgotPasswordForm = (props) => {
     <FormContainer>
       <Form onSubmit={handleSubmit} style={{ gridColumn: 'span 2', borderTopRightRadius: '15px', borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px' }}>
         <Title className="color-dark">Forgot Password</Title>
-        <Input
-          name='username'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
-          placeholder='username'
-        />
+
+        <InputDiv style={{ maxWidth: '320px' }}>
+          <label htmlFor="username">username</label>
+          <input type="text" id="username" name="username" onChange={(e) => { e.persist(); props.updateFormState(e) }} />
+        </InputDiv>
         <Button type="submit" className="primary">
           Submit
         </Button>
@@ -73,24 +74,38 @@ const UpdatePasswordForm = (props) => {
         {!!resendCodeMessage.length && (
           <AlertInfo><IconInformation style={{ display: 'inline-block', marginRight: '1rem' }} />{resendCodeMessage}</AlertInfo>
         )}
+        <InputDiv style={{ maxWidth: '320px' }}>
 
-        <Input
-          name='username'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
-          placeholder='username'
-          value={props.username}
-        />
-        <Input
-          name='passwordResetCode'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
-          placeholder='Reset Code'
-        />
-        <Input
-          name='password'
-          onChange={e => { e.persist(); props.updateFormState(e) }}
-          placeholder='New Password'
-          type="password"
-        />
+          <label htmlFor="username">username</label>
+          <input
+            name='username'
+            id='username'
+            onChange={e => { e.persist(); props.updateFormState(e) }}
+
+            value={props.username || ''}
+          />
+        </InputDiv>
+        <InputDiv style={{ maxWidth: '320px' }}>
+
+          <label htmlFor="passwordResetCode">reset code</label>
+          <input
+            name='passwordResetCode'
+            id='passwordResetCode'
+            onChange={e => { e.persist(); props.updateFormState(e) }}
+
+          />
+        </InputDiv>
+        <InputDiv style={{ maxWidth: '320px' }}>
+
+          <label htmlFor="password">password</label>
+          <input
+            name='password'
+            id='password'
+            onChange={e => { e.persist(); props.updateFormState(e) }}
+
+            type="password"
+          />
+        </InputDiv>
         <Button type="submit" style={{ width: '24rem' }} className="primary">
           Submit
         </Button>
