@@ -77,7 +77,7 @@ function ConfirmSignUp(props) {
       {!!resendCodeMessage.length && (
         <AlertInfo><IconInformation style={{ display: 'inline-block', marginRight: '1rem' }} />{resendCodeMessage}</AlertInfo>
       )}
-      <InputDiv style={{ maxWidth: '320px' }}>
+      <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
 
         <label htmlFor="confirmationCode">code</label>
         <input

@@ -99,7 +99,7 @@ const UpdatePasswordForm = (props) => {
           </InputDiv>
           <InputDiv style={{ maxWidth: '320px', margin: '1.2rem auto' }}>
 
-            <label htmlFor="password">password</label>
+            <label htmlFor="password">new password</label>
             <input
               name='password'
               id='password'
